@@ -107,7 +107,9 @@
     flex:1; min-width:260px;
     background:var(--white); border-radius:var(--radius); padding:20px 22px;
     box-shadow:var(--shadow); display:flex; align-items:center; gap:18px;
+    cursor:pointer; transition:.15s; border:1px solid transparent;
   }
+  .seal-card:hover{box-shadow:0 10px 26px rgba(31,51,80,.16); border-color:var(--gold-soft);}
   .seal-stamp{
     width:64px; height:64px; border-radius:50%; flex:0 0 auto;
     display:flex; align-items:center; justify-content:center;
@@ -120,29 +122,25 @@
   .seal-stamp.owe{color:var(--seal-red); background:var(--seal-red-soft);}
   .seal-stamp.owed{color:var(--jade); background:var(--jade-soft);}
   .seal-stamp.even{color:var(--ink-soft); background:#EDEAE0;}
+  .seal-main{flex:1; min-width:0; display:flex; flex-direction:column; gap:12px;}
   .seal-text .t1{font-size:12px; color:var(--ink-soft); letter-spacing:.05em;}
   .seal-text .t2{font-family:'Noto Serif TC',serif; font-size:19px; font-weight:700; margin-top:2px;}
   .seal-text .t2 .val{font-family:'JetBrains Mono',monospace;}
+  .seal-stats{display:flex; gap:10px; flex-wrap:wrap; padding-top:10px; border-top:1px dashed var(--paper-line);}
+  .seal-stat{flex:1; min-width:110px;}
+  .seal-stat .ss-label{font-size:11px; color:var(--ink-soft); letter-spacing:.03em;}
+  .seal-stat .ss-val{font-size:14.5px; font-weight:700; margin-top:2px; color:var(--navy);}
   .settle-btn{
-    margin-left:auto; background:none; border:1px solid var(--paper-line); color:var(--ink-soft);
+    align-self:flex-start; background:none; border:1px solid var(--paper-line); color:var(--ink-soft);
     padding:7px 12px; border-radius:8px; font-size:12px; cursor:pointer; white-space:nowrap;
   }
   .settle-btn:hover{border-color:var(--ink-soft); color:var(--ink);}
 
-  /* ---------- 分類長條 ---------- */
   .section-title{
     font-family:'Noto Serif TC',serif; font-size:15px; font-weight:700; margin:30px 0 12px;
     display:flex; align-items:center; gap:8px; color:var(--navy);
   }
   .section-title::before{content:""; width:6px; height:6px; background:var(--gold); border-radius:1px; transform:rotate(45deg);}
-  .cat-bars{background:var(--white); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow);}
-  .cat-row{display:flex; align-items:center; gap:12px; padding:7px 0;}
-  .cat-row .cat-icon{width:26px; text-align:center;}
-  .cat-row .cat-name{width:70px; font-size:13px; color:var(--ink-soft);}
-  .cat-row .cat-track{flex:1; height:8px; background:var(--paper); border-radius:99px; overflow:hidden;}
-  .cat-row .cat-fill{height:100%; border-radius:99px; background:var(--navy);}
-  .cat-row .cat-amt{width:90px; text-align:right; font-size:12.5px;}
-  .cat-empty{color:var(--ink-soft); font-size:13px; padding:6px 0;}
 
   /* ---------- 月曆 ---------- */
   .cal{background:var(--white); border-radius:var(--radius); padding:18px 18px 8px; box-shadow:var(--shadow);}
@@ -199,6 +197,20 @@
   }
   .tx-actions button:hover{color:var(--seal-red);}
   .tx-empty{padding:26px 0; text-align:center; color:var(--ink-soft); font-size:13px;}
+
+  /* ---------- 本月收支明細 Modal ---------- */
+  .summary-totals{display:flex; gap:12px; margin-bottom:6px;}
+  .summary-total-item{
+    flex:1; background:var(--paper); border-radius:10px; padding:12px 14px;
+    display:flex; flex-direction:column; gap:4px;
+  }
+  .summary-total-item .st-label{font-size:11.5px; color:var(--ink-soft); letter-spacing:.03em;}
+  .summary-total-item .st-val{font-size:16px; font-weight:700; color:var(--navy);}
+  .summary-group-title{
+    font-family:'Noto Serif TC',serif; font-size:13px; font-weight:700; color:var(--navy);
+    margin:18px 0 4px; display:flex; align-items:center; gap:6px;
+  }
+  .summary-group-title::before{content:""; width:5px; height:5px; background:var(--gold); border-radius:1px; transform:rotate(45deg);}
   .day-add{
     width:100%; margin-top:14px; padding:11px; border:1.5px dashed var(--gold); border-radius:10px;
     background:none; color:var(--navy); font-weight:600; font-size:13.5px; cursor:pointer;
@@ -227,6 +239,36 @@
   }
   .form-submit:hover{background:var(--navy-deep);}
   .hint{font-size:11.5px; color:var(--ink-soft); margin-top:10px; text-align:center;}
+
+  /* ---------- 代墊明細：分人小計 ---------- */
+  .summary-subgroup{margin-bottom:6px;}
+  .summary-subgroup-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:8px 10px; background:var(--paper); border-radius:8px; margin:10px 0 2px;
+  }
+  .summary-subgroup-head .sg-name{font-size:12.5px; font-weight:700; color:var(--navy);}
+  .summary-subgroup-head .sg-total{font-size:12.5px; font-weight:700;}
+  .summary-subgroup-head.who-ina .sg-name{color:var(--seal-red);}
+  .summary-subgroup-head.who-ugg .sg-name{color:var(--jade);}
+
+  /* ---------- Undo Toast ---------- */
+  .undo-toast{
+    position:fixed; left:50%; bottom:26px; transform:translate(-50%, 20px);
+    background:var(--navy-deep); color:var(--white); border-radius:12px;
+    padding:12px 14px 12px 18px; box-shadow:0 10px 30px rgba(0,0,0,.28);
+    display:flex; align-items:center; gap:14px; z-index:80;
+    opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease;
+    max-width:90vw;
+  }
+  .undo-toast.show{opacity:1; pointer-events:auto; transform:translate(-50%, 0);}
+  .undo-toast .ut-text{font-size:13px; white-space:nowrap;}
+  .undo-toast .ut-btn{
+    background:var(--gold); color:var(--navy-deep); border:none; border-radius:8px;
+    padding:7px 14px; font-weight:700; font-size:12.5px; cursor:pointer; white-space:nowrap;
+  }
+  .undo-toast .ut-close{
+    background:none; border:none; color:rgba(251,250,245,.6); cursor:pointer; font-size:15px; padding:2px;
+  }
 </style>
 </head>
 <body>
@@ -262,10 +304,6 @@
   <!-- 債務印章 -->
   <div class="seal-row" id="sealRow"></div>
 
-  <!-- 分類統計 -->
-  <div class="section-title">本月分類統計</div>
-  <div class="cat-bars" id="catBars"></div>
-
   <!-- 月曆 -->
   <div class="section-title">月度總表</div>
   <div class="cal">
@@ -288,6 +326,19 @@
     <div class="modal-body">
       <div id="dayTxList"></div>
       <button class="day-add" id="dayAddBtn">＋ 新增這天的紀錄</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: 本月收支明細（點擊藍框卡片開啟） -->
+<div class="overlay" id="summaryOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="summaryModalTitle">本月收支明細</h3>
+      <button class="modal-close" onclick="closeModal('summaryOverlay')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="summaryTxList"></div>
     </div>
   </div>
 </div>
@@ -383,6 +434,13 @@
   </div>
 </div>
 
+<!-- Undo Toast：一鍵結清後的復原提示 -->
+<div class="undo-toast" id="undoToast">
+  <span class="ut-text" id="undoToastText">已結清 0 筆紀錄</span>
+  <button class="ut-btn" onclick="undoSettle()">復原</button>
+  <button class="ut-close" title="關閉" onclick="hideUndoToast()">✕</button>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ================= Supabase 連線設定 ================= */
@@ -408,6 +466,10 @@ let currentDayStr = null;
 let formType = 'expense';
 let loading = true;
 
+// 「一鍵結清」復原機制：暫存結清前的一瞬間狀態
+let lastSettleBackup = null; // [{id, status}, ...]
+let undoToastTimer = null;
+
 /* ---- 從 Supabase 讀取全部紀錄 ---- */
 async function loadTransactions(){
   const { data, error } = await sb.from(TABLE).select('*').order('date', {ascending:true});
@@ -429,7 +491,6 @@ async function loadTransactions(){
 function renderAll(){
   renderHero();
   renderSeal();
-  renderCatBars();
   renderCalendar();
 }
 
@@ -446,10 +507,19 @@ function renderHero(){
 
 function netDebt(){
   // 正值代表「UGG」欠「INA」；負值代表「INA」欠「UGG」
+  // 「代墊」與「借款」合併計算為最終互欠金額：
+  //   借款：出借人(lender) 借給 借款人(borrower) => borrower 欠 lender 這筆錢
+  //   代墊：付款人(payer) 幫對方代墊 => 對方（非付款人）欠 payer 這筆錢
   let net = 0;
-  transactions.filter(t=>t.type==='debt' && t.status==='unpaid').forEach(t=>{
-    if(t.lender==='INA' && t.borrower==='UGG') net += Number(t.amount);
-    if(t.lender==='UGG' && t.borrower==='INA') net -= Number(t.amount);
+  transactions.forEach(t=>{
+    if(t.status === 'settled') return; // 已結清的紀錄不列入淨額計算
+    if(t.type === 'debt'){
+      if(t.lender==='INA' && t.borrower==='UGG') net += Number(t.amount);
+      if(t.lender==='UGG' && t.borrower==='INA') net -= Number(t.amount);
+    } else if(t.type === 'expense'){
+      if(t.payer==='INA') net += Number(t.amount);
+      if(t.payer==='UGG') net -= Number(t.amount);
+    }
   });
   return net;
 }
@@ -457,50 +527,217 @@ function netDebt(){
 function renderSeal(){
   const net = netDebt();
   const row = document.getElementById('sealRow');
+  const list = monthTx();
+  const totalExpense = list.filter(t=>t.type==='expense').reduce((s,t)=>s+Number(t.amount),0);
+  const totalDebt = list.filter(t=>t.type==='debt').reduce((s,t)=>s+Number(t.amount),0);
+
   let stampClass='even', label='目前互不相欠', sub='雙方帳務已結清';
   if(net > 0){ stampClass='owe'; label='UGG 欠 INA'; sub = money(net); }
   else if(net < 0){ stampClass='owed'; label='INA 欠 UGG'; sub = money(-net); }
 
   row.innerHTML = `
-    <div class="seal-card">
+    <div class="seal-card" onclick="openSummaryModal()">
       <div class="seal-stamp ${stampClass}">${net===0 ? '結清' : '欠款'}</div>
-      <div class="seal-text">
-        <div class="t1">淨債務餘額</div>
-        <div class="t2">${label}${net!==0 ? ' <span class="val">'+sub+'</span>' : ''}</div>
+      <div class="seal-main">
+        <div class="seal-text">
+          <div class="t1">淨債務餘額</div>
+          <div class="t2">${label}${net!==0 ? ' <span class="val">'+sub+'</span>' : ''}</div>
+        </div>
+        <div class="seal-stats">
+          <div class="seal-stat">
+            <div class="ss-label">本月總代墊</div>
+            <div class="ss-val mono">${money(totalExpense)}</div>
+          </div>
+          <div class="seal-stat">
+            <div class="ss-label">本月總借款</div>
+            <div class="ss-val mono">${money(totalDebt)}</div>
+          </div>
+        </div>
       </div>
-      ${net!==0 ? '<button class="settle-btn" onclick="settleAll()">一鍵結清</button>' : ''}
+      ${net!==0 ? '<button class="settle-btn" onclick="event.stopPropagation(); settleAll()">一鍵結清</button>' : ''}
     </div>`;
 }
 
 async function settleAll(){
-  const unpaidIds = transactions.filter(t=>t.type==='debt' && t.status!=='settled').map(t=>t.id);
-  if(unpaidIds.length===0) return;
-  const { error } = await sb.from(TABLE).update({status:'settled'}).in('id', unpaidIds);
+  // 代墊與借款都計入淨債務，因此一鍵結清需同時處理兩種類型
+  const unsettled = transactions.filter(t=>t.status!=='settled');
+  if(unsettled.length===0) return;
+
+  // 誤觸防呆：一鍵結清前先請使用者二次確認
+  const confirmed = confirm(`確定要將本月共 ${unsettled.length} 筆未結清紀錄全部標記為「已結清」嗎？\n（結清後仍可在提示中點擊「復原」還原）`);
+  if(!confirmed) return;
+
+  // 備份結清前一瞬間的狀態，供「復原」使用
+  const backup = unsettled.map(t=>({ id:t.id, status:t.status || 'unpaid' }));
+  const unsettledIds = backup.map(b=>b.id);
+
+  const { error } = await sb.from(TABLE).update({status:'settled'}).in('id', unsettledIds);
   if(error){
     console.error(error);
     alert('結清失敗：' + error.message);
     return;
   }
-  transactions.forEach(t=>{ if(t.type==='debt') t.status='settled'; });
+  transactions.forEach(t=>{ if(unsettledIds.includes(t.id)) t.status='settled'; });
+  lastSettleBackup = backup;
   renderAll();
+  if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
+  if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
+  showUndoToast(backup.length);
 }
 
-function renderCatBars(){
-  const box = document.getElementById('catBars');
-  const list = monthTx().filter(t=>t.type==='expense' || t.type==='debt');
-  if(list.length===0){ box.innerHTML = '<div class="cat-empty">本月尚無支出紀錄</div>'; return; }
-  const sums = {};
-  list.forEach(t=> sums[t.category] = (sums[t.category]||0) + Number(t.amount));
-  const max = Math.max(...Object.values(sums));
-  box.innerHTML = Object.entries(sums)
-    .sort((a,b)=>b[1]-a[1])
-    .map(([cat,amt])=>`
-      <div class="cat-row">
-        <div class="cat-icon">${CATEGORY_ICON[cat]||'📎'}</div>
-        <div class="cat-name">${cat}</div>
-        <div class="cat-track"><div class="cat-fill" style="width:${(amt/max*100).toFixed(0)}%"></div></div>
-        <div class="cat-amt mono">${money(amt)}</div>
-      </div>`).join('');
+/* ---- 復原（Undo）：把上一次一鍵結清的紀錄狀態改回原本的狀態 ---- */
+function showUndoToast(count){
+  const toast = document.getElementById('undoToast');
+  document.getElementById('undoToastText').textContent = `已結清 ${count} 筆紀錄`;
+  toast.classList.add('show');
+  if(undoToastTimer) clearTimeout(undoToastTimer);
+  // 10 秒後自動隱藏提示（但復原資料仍保留至下一次結清前，仍可從程式邏輯復原）
+  undoToastTimer = setTimeout(hideUndoToast, 10000);
+}
+
+function hideUndoToast(){
+  document.getElementById('undoToast').classList.remove('show');
+  if(undoToastTimer){ clearTimeout(undoToastTimer); undoToastTimer=null; }
+}
+
+async function undoSettle(){
+  if(!lastSettleBackup || lastSettleBackup.length===0){
+    hideUndoToast();
+    return;
+  }
+  const backup = lastSettleBackup;
+
+  // 依照原本的 status 分組，減少 API 呼叫次數
+  const groups = {};
+  backup.forEach(b=>{
+    (groups[b.status] = groups[b.status] || []).push(b.id);
+  });
+
+  for(const status of Object.keys(groups)){
+    const ids = groups[status];
+    const { error } = await sb.from(TABLE).update({status}).in('id', ids);
+    if(error){
+      console.error(error);
+      alert('復原失敗：' + error.message);
+      return;
+    }
+  }
+
+  const statusMap = {};
+  backup.forEach(b=>{ statusMap[b.id] = b.status; });
+  transactions.forEach(t=>{
+    if(Object.prototype.hasOwnProperty.call(statusMap, t.id)) t.status = statusMap[t.id];
+  });
+
+  lastSettleBackup = null;
+  hideUndoToast();
+  renderAll();
+  if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
+  if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
+}
+
+/* ================= Modal：本月收支明細（藍框卡片） ================= */
+function openSummaryModal(){
+  document.getElementById('summaryModalTitle').textContent = `${viewYear} 年 ${viewMonth+1} 月 收支明細`;
+  renderSummaryList();
+  document.getElementById('summaryOverlay').classList.add('open');
+}
+
+function renderSummaryList(){
+  const list = monthTx();
+  const expenses = list.filter(t=>t.type==='expense').slice().sort((a,b)=> a.date<b.date?1:-1);
+  const debts = list.filter(t=>t.type==='debt').slice().sort((a,b)=> a.date<b.date?1:-1);
+  const totalExpense = expenses.reduce((s,t)=>s+Number(t.amount),0);
+  const totalDebt = debts.reduce((s,t)=>s+Number(t.amount),0);
+
+  let html = `
+    <div class="summary-totals">
+      <div class="summary-total-item">
+        <div class="st-label">本月代墊總計</div>
+        <div class="st-val mono">${money(totalExpense)}</div>
+      </div>
+      <div class="summary-total-item">
+        <div class="st-label">本月借款總計</div>
+        <div class="st-val mono">${money(totalDebt)}</div>
+      </div>
+    </div>`;
+
+  html += `<div class="summary-group-title">代墊明細</div>`;
+
+  if(expenses.length===0){
+    html += `<div class="tx-empty">本月尚無代墊紀錄</div>`;
+  } else {
+    // 依照付款人（INA／UGG）分組，並分別計算各自代墊總額
+    const renderExpenseItem = t=>{
+      const settled = t.status==='settled';
+      return `
+      <div class="tx-item" style="${settled?'opacity:.5;':''}">
+        <div class="tx-icon type-expense">${CATEGORY_ICON[t.category]||'📎'}</div>
+        <div class="tx-mid">
+          <div class="name">${t.category}${t.note?'・'+t.note:''}${settled?'（已結清）':''}</div>
+          <div class="meta">${t.date.slice(5)}・${t.payer} 支付</div>
+        </div>
+        <div class="tx-amt mono">${money(t.amount)}</div>
+        <div class="tx-actions">
+          <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
+          <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
+        </div>
+      </div>`;
+    };
+
+    const renderPayerGroup = (payerName, cssClass)=>{
+      const items = expenses.filter(t=>t.payer===payerName);
+      if(items.length===0) return '';
+      const subtotal = items.reduce((s,t)=>s+Number(t.amount),0);
+      return `
+        <div class="summary-subgroup">
+          <div class="summary-subgroup-head ${cssClass}">
+            <span class="sg-name">${payerName} 支付</span>
+            <span class="sg-total mono">${money(subtotal)}</span>
+          </div>
+          ${items.map(renderExpenseItem).join('')}
+        </div>`;
+    };
+
+    html += renderPayerGroup('INA', 'who-ina');
+    html += renderPayerGroup('UGG', 'who-ugg');
+
+    // 若有付款人不是 INA／UGG 的例外資料，仍完整顯示避免遺漏
+    const others = expenses.filter(t=>t.payer!=='INA' && t.payer!=='UGG');
+    if(others.length>0){
+      const subtotal = others.reduce((s,t)=>s+Number(t.amount),0);
+      html += `
+        <div class="summary-subgroup">
+          <div class="summary-subgroup-head">
+            <span class="sg-name">其他</span>
+            <span class="sg-total mono">${money(subtotal)}</span>
+          </div>
+          ${others.map(renderExpenseItem).join('')}
+        </div>`;
+    }
+  }
+
+  html += `<div class="summary-group-title">借款明細</div>`;
+  html += debts.length===0
+    ? `<div class="tx-empty">本月尚無借款紀錄</div>`
+    : debts.map(t=>{
+        const settled = t.status==='settled';
+        return `
+      <div class="tx-item" style="${settled?'opacity:.5;':''}">
+        <div class="tx-icon type-debt">${CATEGORY_ICON[t.category]||'🖋'}</div>
+        <div class="tx-mid">
+          <div class="name">${t.lender} 借給 ${t.borrower}${settled?'（已結清）':''}</div>
+          <div class="meta">${t.date.slice(5)}・${t.category?t.category+'・':''}${t.note||'借款'}</div>
+        </div>
+        <div class="tx-amt mono">${money(t.amount)}</div>
+        <div class="tx-actions">
+          <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
+          <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
+        </div>
+      </div>`;
+      }).join('');
+
+  document.getElementById('summaryTxList').innerHTML = html;
 }
 
 function renderCalendar(){
@@ -591,11 +828,12 @@ function renderDayList(){
   }
   box.innerHTML = list.map(t=>{
     if(t.type==='expense'){
+      const settled = t.status==='settled';
       return `
-      <div class="tx-item">
+      <div class="tx-item" style="${settled?'opacity:.5;':''}">
         <div class="tx-icon type-expense">${CATEGORY_ICON[t.category]||'📎'}</div>
         <div class="tx-mid">
-          <div class="name">${t.category}${t.note?'・'+t.note:''}</div>
+          <div class="name">${t.category}${t.note?'・'+t.note:''}${settled?'（已結清）':''}</div>
           <div class="meta">${t.payer} 支付</div>
         </div>
         <div class="tx-amt mono">${money(t.amount)}</div>
@@ -631,7 +869,8 @@ async function deleteTx(id){
     return;
   }
   transactions = transactions.filter(t=>t.id!==id);
-  renderDayList();
+  if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
+  if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
   renderAll();
 }
 
@@ -680,14 +919,18 @@ async function saveTransaction(e){
   const amount = Number(document.getElementById('fAmount').value);
   const note = document.getElementById('fNote').value;
 
+  // 編輯時保留原本的結清狀態，避免每次修改都被重置回「未結清」
+  const existing = editId ? transactions.find(t=>t.id===Number(editId)) : null;
+  const status = existing ? (existing.status || 'unpaid') : 'unpaid';
+
   let payload;
   if(formType==='expense'){
     payload = {
       type:'expense', date, amount,
       category: document.getElementById('fCategory').value,
       payer: document.getElementById('fPayer').value,
-      lender:null, borrower:null, status:null,
-      note
+      lender:null, borrower:null,
+      note, status
     };
   } else {
     payload = {
@@ -696,7 +939,7 @@ async function saveTransaction(e){
       borrower: document.getElementById('fBorrower').value,
       category: document.getElementById('fDebtCategory').value,
       payer:null,
-      note, status:'unpaid'
+      note, status
     };
   }
 
@@ -722,10 +965,16 @@ async function saveTransaction(e){
 
   closeModal('formOverlay');
   currentDayStr = date;
-  renderDayList();
   renderAll();
 
-  if(!document.getElementById('dayOverlay').classList.contains('open')){
+  // 依照目前實際開啟的視窗刷新對應清單，而不是每次都強制開啟「當日明細」
+  const dayOpen = document.getElementById('dayOverlay').classList.contains('open');
+  const summaryOpen = document.getElementById('summaryOverlay').classList.contains('open');
+  if(dayOpen){
+    renderDayList();
+  } else if(summaryOpen){
+    renderSummaryList();
+  } else {
     openDayModal(date);
   }
 }
