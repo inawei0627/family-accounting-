@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INA & UGG 家帳收支存摺</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFEBDD;
+    --paper-line:#DCD5BE;
+    --navy:#1F3350;
+    --navy-deep:#152438;
+    --gold:#B08D4F;
+    --gold-soft:#D8C79A;
+    --seal-red:#A63D33;
+    --seal-red-soft:#E7D3CE;
+    --jade:#3B6E5E;
+    --jade-soft:#D6E3DD;
+    --ink:#26241F;
+    --ink-soft:#635C4C;
+    --white:#FBFAF5;
+    --radius:14px;
+    --shadow:0 6px 20px rgba(31,51,80,.12);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    background-image:
+      repeating-linear-gradient(180deg, rgba(176,141,79,.05) 0px, rgba(176,141,79,.05) 1px, transparent 1px, transparent 34px);
+    color:var(--ink);
+    font-family:'Noto Sans TC', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'JetBrains Mono', monospace;}
+  .wrap{max-width:920px;margin:0 auto;padding:28px 20px 80px;}
+
+  /* ---------- Hero : 存摺封面 ---------- */
+  .cover{
+    background:linear-gradient(155deg, var(--navy) 0%, var(--navy-deep) 100%);
+    border-radius:18px;
+    padding:30px 32px 26px;
+    color:var(--white);
+    position:relative;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+  .cover::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 88% -10%, rgba(216,199,154,.18), transparent 45%),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.03) 0 2px, transparent 2px 40px);
+    pointer-events:none;
+  }
+  .cover-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;}
+  .cover-eyebrow{
+    font-size:11px; letter-spacing:.28em; color:var(--gold-soft); text-transform:uppercase;
+    border:1px solid rgba(216,199,154,.4); padding:4px 10px; border-radius:999px; display:inline-block;
+  }
+  .cover-title{
+    font-family:'Noto Serif TC', serif; font-weight:900; font-size:26px; margin:14px 0 2px;
+    letter-spacing:.04em;
+  }
+  .cover-sub{color:rgba(251,250,245,.6); font-size:13px;}
+  .month-nav{display:flex; align-items:center; gap:10px; position:relative;}
+  .month-nav button{
+    background:rgba(251,250,245,.1); border:1px solid rgba(251,250,245,.25); color:var(--white);
+    width:32px; height:32px; border-radius:8px; cursor:pointer; font-size:15px;
+    display:flex;align-items:center;justify-content:center; transition:.15s;
+  }
+  .month-nav button:hover{background:rgba(251,250,245,.22);}
+  .month-nav .label{
+    font-family:'Noto Serif TC',serif; font-size:15px; min-width:100px; width:auto; height:auto;
+    padding:6px 10px; text-align:center;
+  }
+  .month-picker{
+    display:none; gap:8px; position:absolute; top:42px; right:0; z-index:6;
+    background:var(--white); border-radius:10px; padding:10px; box-shadow:var(--shadow);
+  }
+  .month-picker.open{display:flex;}
+  .month-picker select{
+    padding:7px 9px; border-radius:7px; border:1px solid var(--paper-line); background:var(--paper);
+    font-size:13px; color:var(--ink); font-family:'Noto Sans TC', sans-serif;
+  }
+
+  .cover-figure{
+    margin-top:22px; padding-top:18px; border-top:1px dashed rgba(216,199,154,.35);
+    display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:14px;
+  }
+  .cover-figure .amount{
+    font-size:38px; font-weight:700; letter-spacing:.02em;
+  }
+  .cover-figure .amount-label{font-size:12px; color:var(--gold-soft); letter-spacing:.1em;}
+  .add-btn{
+    background:var(--gold); color:var(--navy-deep); border:none; border-radius:10px;
+    padding:11px 18px; font-weight:700; font-size:14px; cursor:pointer;
+    box-shadow:0 4px 12px rgba(176,141,79,.4); transition:.15s;
+  }
+  .add-btn:hover{transform:translateY(-1px); box-shadow:0 6px 16px rgba(176,141,79,.5);}
+
+  /* ---------- 印章 / 債務區 ---------- */
+  .seal-row{display:flex; gap:16px; margin-top:20px; flex-wrap:wrap;}
+  .seal-card{
+    flex:1; min-width:260px;
+    background:var(--white); border-radius:var(--radius); padding:20px 22px;
+    box-shadow:var(--shadow); display:flex; align-items:center; gap:18px;
+  }
+  .seal-stamp{
+    width:64px; height:64px; border-radius:50%; flex:0 0 auto;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Noto Serif TC',serif; font-weight:900; font-size:13px; text-align:center; line-height:1.15;
+    border:2.5px solid currentColor; position:relative; letter-spacing:.02em;
+  }
+  .seal-stamp::after{
+    content:""; position:absolute; inset:5px; border:1px solid currentColor; border-radius:50%; opacity:.5;
+  }
+  .seal-stamp.owe{color:var(--seal-red); background:var(--seal-red-soft);}
+  .seal-stamp.owed{color:var(--jade); background:var(--jade-soft);}
+  .seal-stamp.even{color:var(--ink-soft); background:#EDEAE0;}
+  .seal-text .t1{font-size:12px; color:var(--ink-soft); letter-spacing:.05em;}
+  .seal-text .t2{font-family:'Noto Serif TC',serif; font-size:19px; font-weight:700; margin-top:2px;}
+  .seal-text .t2 .val{font-family:'JetBrains Mono',monospace;}
+  .settle-btn{
+    margin-left:auto; background:none; border:1px solid var(--paper-line); color:var(--ink-soft);
+    padding:7px 12px; border-radius:8px; font-size:12px; cursor:pointer; white-space:nowrap;
+  }
+  .settle-btn:hover{border-color:var(--ink-soft); color:var(--ink);}
+
+  /* ---------- 分類長條 ---------- */
+  .section-title{
+    font-family:'Noto Serif TC',serif; font-size:15px; font-weight:700; margin:30px 0 12px;
+    display:flex; align-items:center; gap:8px; color:var(--navy);
+  }
+  .section-title::before{content:""; width:6px; height:6px; background:var(--gold); border-radius:1px; transform:rotate(45deg);}
+  .cat-bars{background:var(--white); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow);}
+  .cat-row{display:flex; align-items:center; gap:12px; padding:7px 0;}
+  .cat-row .cat-icon{width:26px; text-align:center;}
+  .cat-row .cat-name{width:70px; font-size:13px; color:var(--ink-soft);}
+  .cat-row .cat-track{flex:1; height:8px; background:var(--paper); border-radius:99px; overflow:hidden;}
+  .cat-row .cat-fill{height:100%; border-radius:99px; background:var(--navy);}
+  .cat-row .cat-amt{width:90px; text-align:right; font-size:12.5px;}
+  .cat-empty{color:var(--ink-soft); font-size:13px; padding:6px 0;}
+
+  /* ---------- 月曆 ---------- */
+  .cal{background:var(--white); border-radius:var(--radius); padding:18px 18px 8px; box-shadow:var(--shadow);}
+  .cal-week{display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-size:12px; color:var(--ink-soft); padding-bottom:8px; border-bottom:1px solid var(--paper-line); margin-bottom:8px;}
+  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px;}
+  .cal-cell{
+    min-height:76px; border-radius:10px; padding:7px 6px; cursor:pointer; position:relative;
+    border:1px solid transparent; transition:.12s;
+  }
+  .cal-cell:hover{border-color:var(--gold-soft); background:#FBF8EF;}
+  .cal-cell.empty{cursor:default;}
+  .cal-cell.empty:hover{border-color:transparent; background:none;}
+  .cal-cell.today{background:var(--jade-soft);}
+  .cal-day-num{font-size:12.5px; font-weight:600; color:var(--ink-soft);}
+  .cal-cell.today .cal-day-num{color:var(--jade);}
+  .cal-day-sum{font-size:11px; margin-top:20px; text-align:right;}
+  .cal-dots{position:absolute; left:7px; bottom:8px; display:flex; gap:3px;}
+  .dot{width:5px; height:5px; border-radius:50%;}
+  .dot.expense{background:var(--navy);}
+  .dot.debt{background:var(--seal-red);}
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(20,26,38,.55); backdrop-filter:blur(2px);
+    display:none; align-items:center; justify-content:center; z-index:50; padding:20px;
+  }
+  .overlay.open{display:flex;}
+  .modal{
+    background:var(--white); border-radius:16px; width:100%; max-width:440px;
+    max-height:86vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.3);
+  }
+  .modal-head{
+    padding:18px 20px; border-bottom:1px solid var(--paper-line); display:flex; justify-content:space-between; align-items:center;
+    position:sticky; top:0; background:var(--white);
+  }
+  .modal-head h3{margin:0; font-family:'Noto Serif TC',serif; font-size:17px; color:var(--navy);}
+  .modal-close{background:none; border:none; font-size:20px; cursor:pointer; color:var(--ink-soft); line-height:1;}
+  .modal-body{padding:16px 20px 22px;}
+
+  .tx-item{
+    display:flex; align-items:center; gap:10px; padding:11px 0; border-bottom:1px solid var(--paper-line);
+  }
+  .tx-item:last-child{border-bottom:none;}
+  .tx-icon{width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:16px; flex:0 0 auto;}
+  .tx-icon.type-expense{background:#E7E2D3;}
+  .tx-icon.type-debt{background:var(--seal-red-soft);}
+  .tx-mid{flex:1; min-width:0;}
+  .tx-mid .name{font-size:13.5px; font-weight:500;}
+  .tx-mid .meta{font-size:11.5px; color:var(--ink-soft); margin-top:1px;}
+  .tx-amt{font-size:13.5px; text-align:right; white-space:nowrap;}
+  .tx-actions{display:flex; gap:4px; margin-left:4px;}
+  .tx-actions button{
+    border:none; background:none; cursor:pointer; font-size:13px; color:var(--ink-soft); padding:4px;
+  }
+  .tx-actions button:hover{color:var(--seal-red);}
+  .tx-empty{padding:26px 0; text-align:center; color:var(--ink-soft); font-size:13px;}
+  .day-add{
+    width:100%; margin-top:14px; padding:11px; border:1.5px dashed var(--gold); border-radius:10px;
+    background:none; color:var(--navy); font-weight:600; font-size:13.5px; cursor:pointer;
+  }
+  .day-add:hover{background:#FBF6E9;}
+
+  /* ---------- Form ---------- */
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:12px; color:var(--ink-soft); margin-bottom:5px; letter-spacing:.02em;}
+  .field input, .field select, .field textarea{
+    width:100%; padding:9px 11px; border:1px solid var(--paper-line); border-radius:8px;
+    font-family:inherit; font-size:13.5px; background:var(--paper); color:var(--ink);
+  }
+  .field textarea{resize:vertical; min-height:50px;}
+  .type-toggle{display:flex; gap:8px; margin-bottom:16px;}
+  .type-toggle button{
+    flex:1; padding:9px; border-radius:9px; border:1.5px solid var(--paper-line); background:none;
+    font-size:13px; cursor:pointer; color:var(--ink-soft); font-weight:600;
+  }
+  .type-toggle button.active.et-expense{border-color:var(--navy); color:var(--navy); background:#EEF1F5;}
+  .type-toggle button.active.et-debt{border-color:var(--seal-red); color:var(--seal-red); background:var(--seal-red-soft);}
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .form-submit{
+    width:100%; padding:12px; border:none; border-radius:10px; background:var(--navy); color:var(--white);
+    font-weight:700; font-size:14px; cursor:pointer; margin-top:4px;
+  }
+  .form-submit:hover{background:var(--navy-deep);}
+  .hint{font-size:11.5px; color:var(--ink-soft); margin-top:10px; text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- 封面 / Hero -->
+  <div class="cover">
+    <div class="cover-top">
+      <div>
+        <span class="cover-eyebrow">Household Ledger</span>
+        <div class="cover-title">INA &amp; UGG 家帳收支存摺</div>
+      </div>
+      <div class="month-nav">
+        <button onclick="changeMonth(-1)">‹</button>
+        <button class="label" id="monthLabelBtn" onclick="togglePicker(event)"></button>
+        <button onclick="changeMonth(1)">›</button>
+        <div class="month-picker" id="monthPicker">
+          <select id="pickYear" onchange="jumpToPicker()"></select>
+          <select id="pickMonth" onchange="jumpToPicker()"></select>
+        </div>
+      </div>
+    </div>
+    <div class="cover-figure">
+      <div>
+        <div class="amount-label">本月共同支出總額</div>
+        <div class="amount mono" id="monthTotal">NT$ 0</div>
+      </div>
+      <button class="add-btn" onclick="openForm(todayStr())">＋ 新增一筆</button>
+    </div>
+  </div>
+
+  <!-- 債務印章 -->
+  <div class="seal-row" id="sealRow"></div>
+
+  <!-- 分類統計 -->
+  <div class="section-title">本月分類統計</div>
+  <div class="cat-bars" id="catBars"></div>
+
+  <!-- 月曆 -->
+  <div class="section-title">月度總表</div>
+  <div class="cal">
+    <div class="cal-week">
+      <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <div class="hint">＊示範版本資料僅保存於瀏覽器記憶體，重新整理頁面會重置為預設範例資料。</div>
+</div>
+
+<!-- Modal: 當日明細 -->
+<div class="overlay" id="dayOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="dayModalTitle">日期明細</h3>
+      <button class="modal-close" onclick="closeModal('dayOverlay')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="dayTxList"></div>
+      <button class="day-add" id="dayAddBtn">＋ 新增這天的紀錄</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: 新增/編輯表單 -->
+<div class="overlay" id="formOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="formModalTitle">新增紀錄</h3>
+      <button class="modal-close" onclick="closeModal('formOverlay')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="type-toggle">
+        <button type="button" class="et-expense" id="btnTypeExpense" onclick="setFormType('expense')">代墊</button>
+        <button type="button" class="et-debt" id="btnTypeDebt" onclick="setFormType('debt')">借款</button>
+      </div>
+      <form id="txForm" onsubmit="saveTransaction(event)">
+        <input type="hidden" id="fEditId">
+        <div class="field">
+          <label>日期</label>
+          <input type="date" id="fDate" required>
+        </div>
+
+        <div id="expenseFields">
+          <div class="two-col">
+            <div class="field">
+              <label>分類</label>
+              <select id="fCategory">
+                <option value="飲食">🍜 飲食</option>
+                <option value="居家">🏠 居家</option>
+                <option value="交通">🚗 交通</option>
+                <option value="娛樂">🎬 娛樂</option>
+                <option value="醫療">💊 醫療</option>
+                <option value="現金">💵 現金</option>
+                <option value="其他">📎 其他</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>付款人</label>
+              <select id="fPayer">
+                <option value="UGG">UGG</option>
+                <option value="INA">INA</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div id="debtFields" style="display:none;">
+          <div class="two-col">
+            <div class="field">
+              <label>出借人</label>
+              <select id="fLender">
+                <option value="UGG">UGG</option>
+                <option value="INA">INA</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>借款人</label>
+              <select id="fBorrower">
+                <option value="INA">INA</option>
+                <option value="UGG">UGG</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label>分類</label>
+            <select id="fDebtCategory">
+              <option value="飲食">🍜 飲食</option>
+              <option value="居家">🏠 居家</option>
+              <option value="交通">🚗 交通</option>
+              <option value="娛樂">🎬 娛樂</option>
+              <option value="醫療">💊 醫療</option>
+              <option value="現金">💵 現金</option>
+              <option value="其他">📎 其他</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <label>金額 (NT$)</label>
+            <input type="number" id="fAmount" min="0" step="1" required>
+          </div>
+          <div class="field">
+            <label>備註</label>
+            <input type="text" id="fNote" placeholder="例如：代墊房租">
+          </div>
+        </div>
+
+        <button type="submit" class="form-submit" id="fSubmitBtn">儲存紀錄</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= 資料層（記憶體儲存，重新整理即重置） ================= */
+const CATEGORY_ICON = {飲食:'🍜', 居家:'🏠', 交通:'🚗', 娛樂:'🎬', 醫療:'💊', 現金:'💵', 其他:'📎'};
+
+function pad(n){return String(n).padStart(2,'0');}
+function fmtDate(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;}
+function todayStr(){return fmtDate(new Date());}
+function money(n){return 'NT$ ' + Number(n).toLocaleString('zh-Hant-TW');}
+
+let uid = 1;
+function nextId(){return uid++;}
+
+// 種子範例資料：以「今天」為基準產生本月幾筆示範紀錄
+const today = new Date();
+const Y = today.getFullYear(), M = today.getMonth();
+function d(day){return `${Y}-${pad(M+1)}-${pad(Math.min(day, new Date(Y,M+1,0).getDate()))}`;}
+
+let transactions = [
+  {id:nextId(), date:d(2),  type:'expense', category:'飲食', amount:850,  payer:'UGG', note:'晚餐採買'},
+  {id:nextId(), date:d(2),  type:'expense', category:'居家', amount:1200, payer:'INA', note:'衛生紙、清潔用品'},
+  {id:nextId(), date:d(5),  type:'debt',    lender:'INA', borrower:'UGG', amount:1500, category:'交通', note:'代墊機車保養費', status:'unpaid'},
+  {id:nextId(), date:d(8),  type:'expense', category:'交通', amount:600,  payer:'UGG', note:'加油'},
+  {id:nextId(), date:d(12), type:'expense', category:'飲食', amount:2200, payer:'INA', note:'週末採買一週食材'},
+  {id:nextId(), date:d(15), type:'debt',    lender:'UGG', borrower:'INA', amount:800,  category:'娛樂', note:'代墊瑜珈月費', status:'unpaid'},
+  {id:nextId(), date:d(18), type:'expense', category:'娛樂', amount:1000, payer:'UGG', note:'電影＋晚餐'},
+  {id:nextId(), date:d(21), type:'expense', category:'醫療', amount:450,  payer:'INA', note:'感冒藥'},
+  {id:nextId(), date:d(9),  type:'expense', category:'現金', amount:1000, payer:'UGG', note:'提領零用現金'},
+];
+
+let viewYear = Y, viewMonth = M;
+let currentDayStr = null;
+let formType = 'expense';
+
+/* ================= 渲染 ================= */
+function renderAll(){
+  renderHero();
+  renderSeal();
+  renderCatBars();
+  renderCalendar();
+}
+
+function monthTx(){
+  const prefix = `${viewYear}-${pad(viewMonth+1)}`;
+  return transactions.filter(t => t.date.startsWith(prefix));
+}
+
+function renderHero(){
+  document.getElementById('monthLabelBtn').textContent = `${viewYear} 年 ${viewMonth+1} 月`;
+  const total = monthTx().filter(t=>t.type==='expense').reduce((s,t)=>s+Number(t.amount),0);
+  document.getElementById('monthTotal').textContent = money(total);
+}
+
+function netDebt(){
+  // 正值代表「UGG」欠「INA」；負值代表「INA」欠「UGG」
+  let net = 0;
+  transactions.filter(t=>t.type==='debt' && t.status==='unpaid').forEach(t=>{
+    if(t.lender==='INA' && t.borrower==='UGG') net += Number(t.amount);
+    if(t.lender==='UGG' && t.borrower==='INA') net -= Number(t.amount);
+  });
+  return net;
+}
+
+function renderSeal(){
+  const net = netDebt();
+  const row = document.getElementById('sealRow');
+  let stampClass='even', label='目前互不相欠', sub='雙方帳務已結清';
+  if(net > 0){ stampClass='owe'; label='UGG 欠 INA'; sub = money(net); }
+  else if(net < 0){ stampClass='owed'; label='INA 欠 UGG'; sub = money(-net); }
+
+  row.innerHTML = `
+    <div class="seal-card">
+      <div class="seal-stamp ${stampClass}">${net===0 ? '結清' : '欠款'}</div>
+      <div class="seal-text">
+        <div class="t1">淨債務餘額</div>
+        <div class="t2">${label}${net!==0 ? ' <span class="val">'+sub+'</span>' : ''}</div>
+      </div>
+      ${net!==0 ? '<button class="settle-btn" onclick="settleAll()">一鍵結清</button>' : ''}
+    </div>`;
+}
+
+function settleAll(){
+  transactions.forEach(t=>{ if(t.type==='debt') t.status='settled'; });
+  renderAll();
+}
+
+function renderCatBars(){
+  const box = document.getElementById('catBars');
+  const list = monthTx().filter(t=>t.type==='expense' || t.type==='debt');
+  if(list.length===0){ box.innerHTML = '<div class="cat-empty">本月尚無支出紀錄</div>'; return; }
+  const sums = {};
+  list.forEach(t=> sums[t.category] = (sums[t.category]||0) + Number(t.amount));
+  const max = Math.max(...Object.values(sums));
+  box.innerHTML = Object.entries(sums)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([cat,amt])=>`
+      <div class="cat-row">
+        <div class="cat-icon">${CATEGORY_ICON[cat]||'📎'}</div>
+        <div class="cat-name">${cat}</div>
+        <div class="cat-track"><div class="cat-fill" style="width:${(amt/max*100).toFixed(0)}%"></div></div>
+        <div class="cat-amt mono">${money(amt)}</div>
+      </div>`).join('');
+}
+
+function renderCalendar(){
+  const grid = document.getElementById('calGrid');
+  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+  const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+  let html = '';
+  for(let i=0;i<firstDay;i++) html += `<div class="cal-cell empty"></div>`;
+
+  for(let day=1; day<=daysInMonth; day++){
+    const dateStr = `${viewYear}-${pad(viewMonth+1)}-${pad(day)}`;
+    const dayTx = transactions.filter(t=>t.date===dateStr);
+    const expenseSum = dayTx.filter(t=>t.type==='expense').reduce((s,t)=>s+Number(t.amount),0);
+    const hasDebt = dayTx.some(t=>t.type==='debt');
+    const hasExpense = dayTx.some(t=>t.type==='expense');
+    const isToday = dateStr === todayStr();
+
+    html += `
+      <div class="cal-cell ${isToday?'today':''}" onclick="openDayModal('${dateStr}')">
+        <div class="cal-day-num">${day}</div>
+        ${expenseSum>0 ? `<div class="cal-day-sum mono">${expenseSum.toLocaleString()}</div>` : ''}
+        ${(hasDebt||hasExpense) ? `<div class="cal-dots">${hasExpense?'<span class="dot expense"></span>':''}${hasDebt?'<span class="dot debt"></span>':''}</div>` : ''}
+      </div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function changeMonth(delta){
+  viewMonth += delta;
+  if(viewMonth<0){viewMonth=11; viewYear--;}
+  if(viewMonth>11){viewMonth=0; viewYear++;}
+  renderAll();
+}
+
+/* ---- 年份／月份快速選擇器 ---- */
+function togglePicker(e){
+  e.stopPropagation();
+  const p = document.getElementById('monthPicker');
+  const willOpen = !p.classList.contains('open');
+  if(willOpen){
+    const ySel = document.getElementById('pickYear');
+    const mSel = document.getElementById('pickMonth');
+    ySel.innerHTML = '';
+    for(let y=viewYear-6; y<=viewYear+6; y++){
+      ySel.innerHTML += `<option value="${y}" ${y===viewYear?'selected':''}>${y} 年</option>`;
+    }
+    mSel.innerHTML = '';
+    for(let m=0;m<12;m++){
+      mSel.innerHTML += `<option value="${m}" ${m===viewMonth?'selected':''}>${m+1} 月</option>`;
+    }
+    p.classList.add('open');
+  } else {
+    p.classList.remove('open');
+  }
+}
+
+function jumpToPicker(){
+  viewYear = Number(document.getElementById('pickYear').value);
+  viewMonth = Number(document.getElementById('pickMonth').value);
+  document.getElementById('monthPicker').classList.remove('open');
+  renderAll();
+}
+
+document.addEventListener('click', (e)=>{
+  const picker = document.getElementById('monthPicker');
+  const btn = document.getElementById('monthLabelBtn');
+  if(picker && picker.classList.contains('open') && !picker.contains(e.target) && e.target!==btn){
+    picker.classList.remove('open');
+  }
+});
+
+/* ================= Modal：當日明細 ================= */
+function openDayModal(dateStr){
+  currentDayStr = dateStr;
+  const [yy,mm,dd] = dateStr.split('-');
+  document.getElementById('dayModalTitle').textContent = `${yy} 年 ${mm} 月 ${dd} 日 明細`;
+  renderDayList();
+  document.getElementById('dayAddBtn').onclick = () => openForm(dateStr);
+  document.getElementById('dayOverlay').classList.add('open');
+}
+
+function renderDayList(){
+  const list = transactions.filter(t=>t.date===currentDayStr);
+  const box = document.getElementById('dayTxList');
+  if(list.length===0){
+    box.innerHTML = '<div class="tx-empty">這天還沒有任何紀錄</div>';
+    return;
+  }
+  box.innerHTML = list.map(t=>{
+    if(t.type==='expense'){
+      return `
+      <div class="tx-item">
+        <div class="tx-icon type-expense">${CATEGORY_ICON[t.category]||'📎'}</div>
+        <div class="tx-mid">
+          <div class="name">${t.category}${t.note?'・'+t.note:''}</div>
+          <div class="meta">${t.payer} 支付</div>
+        </div>
+        <div class="tx-amt mono">${money(t.amount)}</div>
+        <div class="tx-actions">
+          <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
+          <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
+        </div>
+      </div>`;
+    } else {
+      const settled = t.status==='settled';
+      return `
+      <div class="tx-item" style="${settled?'opacity:.5;':''}">
+        <div class="tx-icon type-debt">${CATEGORY_ICON[t.category]||'🖋'}</div>
+        <div class="tx-mid">
+          <div class="name">${t.lender} 借給 ${t.borrower}${settled?'（已結清）':''}</div>
+          <div class="meta">${t.category?t.category+'・':''}${t.note||'借款'}</div>
+        </div>
+        <div class="tx-amt mono">${money(t.amount)}</div>
+        <div class="tx-actions">
+          <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
+          <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
+        </div>
+      </div>`;
+    }
+  }).join('');
+}
+
+function deleteTx(id){
+  transactions = transactions.filter(t=>t.id!==id);
+  renderDayList();
+  renderAll();
+}
+
+/* ================= Modal：新增／編輯表單 ================= */
+function setFormType(type){
+  formType = type;
+  document.getElementById('btnTypeExpense').classList.toggle('active', type==='expense');
+  document.getElementById('btnTypeDebt').classList.toggle('active', type==='debt');
+  document.getElementById('expenseFields').style.display = type==='expense' ? 'block' : 'none';
+  document.getElementById('debtFields').style.display = type==='debt' ? 'block' : 'none';
+}
+
+function openForm(dateStr, editId=null){
+  document.getElementById('formOverlay').classList.add('open');
+  document.getElementById('fDate').value = dateStr;
+  document.getElementById('fEditId').value = editId ?? '';
+
+  if(editId){
+    const t = transactions.find(x=>x.id===editId);
+    document.getElementById('formModalTitle').textContent = '編輯紀錄';
+    document.getElementById('fSubmitBtn').textContent = '更新紀錄';
+    setFormType(t.type);
+    document.getElementById('fAmount').value = t.amount;
+    document.getElementById('fNote').value = t.note || '';
+    if(t.type==='expense'){
+      document.getElementById('fCategory').value = t.category;
+      document.getElementById('fPayer').value = t.payer;
+    } else {
+      document.getElementById('fLender').value = t.lender;
+      document.getElementById('fBorrower').value = t.borrower;
+      document.getElementById('fDebtCategory').value = t.category || '其他';
+    }
+  } else {
+    document.getElementById('formModalTitle').textContent = '新增紀錄';
+    document.getElementById('fSubmitBtn').textContent = '儲存紀錄';
+    document.getElementById('txForm').reset();
+    document.getElementById('fDate').value = dateStr;
+    setFormType('expense');
+  }
+}
+
+function saveTransaction(e){
+  e.preventDefault();
+  const editId = document.getElementById('fEditId').value;
+  const date = document.getElementById('fDate').value;
+  const amount = document.getElementById('fAmount').value;
+  const note = document.getElementById('fNote').value;
+
+  let payload;
+  if(formType==='expense'){
+    payload = {
+      type:'expense', date, amount,
+      category: document.getElementById('fCategory').value,
+      payer: document.getElementById('fPayer').value,
+      note
+    };
+  } else {
+    payload = {
+      type:'debt', date, amount,
+      lender: document.getElementById('fLender').value,
+      borrower: document.getElementById('fBorrower').value,
+      category: document.getElementById('fDebtCategory').value,
+      note, status:'unpaid'
+    };
+  }
+
+  if(editId){
+    const idx = transactions.findIndex(t=>t.id===Number(editId));
+    transactions[idx] = {...transactions[idx], ...payload};
+  } else {
+    transactions.push({id: nextId(), ...payload});
+  }
+
+  closeModal('formOverlay');
+  currentDayStr = date;
+  renderDayList();
+  renderAll();
+
+  if(!document.getElementById('dayOverlay').classList.contains('open')){
+    openDayModal(date);
+  }
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+}
+
+// 點擊遮罩空白處關閉
+document.querySelectorAll('.overlay').forEach(ov=>{
+  ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('open'); });
+});
+
+renderAll();
+</script>
+</body>
+</html>
