@@ -275,7 +275,7 @@
     <div class="cal-grid" id="calGrid"></div>
   </div>
 
-  <div class="hint">＊示範版本資料僅保存於瀏覽器記憶體，重新整理頁面會重置為預設範例資料。</div>
+  <div class="hint">＊資料已同步儲存於 Supabase 雲端資料庫，重新整理頁面不會遺失紀錄。</div>
 </div>
 
 <!-- Modal: 當日明細 -->
@@ -383,8 +383,15 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* ================= 資料層（記憶體儲存，重新整理即重置） ================= */
+/* ================= Supabase 連線設定 ================= */
+const SUPABASE_URL = 'https://sbeffokvaugjiokmulbz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_l5ByiaTmPOofL24JXM_GOQ_s3LofVok';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const TABLE = 'transactions';
+
+/* ================= 資料層（雲端 Supabase 儲存） ================= */
 const CATEGORY_ICON = {飲食:'🍜', 居家:'🏠', 交通:'🚗', 娛樂:'🎬', 醫療:'💊', 現金:'💵', 其他:'📎'};
 
 function pad(n){return String(n).padStart(2,'0');}
@@ -392,29 +399,31 @@ function fmtDate(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.ge
 function todayStr(){return fmtDate(new Date());}
 function money(n){return 'NT$ ' + Number(n).toLocaleString('zh-Hant-TW');}
 
-let uid = 1;
-function nextId(){return uid++;}
-
-// 種子範例資料：以「今天」為基準產生本月幾筆示範紀錄
 const today = new Date();
 const Y = today.getFullYear(), M = today.getMonth();
-function d(day){return `${Y}-${pad(M+1)}-${pad(Math.min(day, new Date(Y,M+1,0).getDate()))}`;}
 
-let transactions = [
-  {id:nextId(), date:d(2),  type:'expense', category:'飲食', amount:850,  payer:'UGG', note:'晚餐採買'},
-  {id:nextId(), date:d(2),  type:'expense', category:'居家', amount:1200, payer:'INA', note:'衛生紙、清潔用品'},
-  {id:nextId(), date:d(5),  type:'debt',    lender:'INA', borrower:'UGG', amount:1500, category:'交通', note:'代墊機車保養費', status:'unpaid'},
-  {id:nextId(), date:d(8),  type:'expense', category:'交通', amount:600,  payer:'UGG', note:'加油'},
-  {id:nextId(), date:d(12), type:'expense', category:'飲食', amount:2200, payer:'INA', note:'週末採買一週食材'},
-  {id:nextId(), date:d(15), type:'debt',    lender:'UGG', borrower:'INA', amount:800,  category:'娛樂', note:'代墊瑜珈月費', status:'unpaid'},
-  {id:nextId(), date:d(18), type:'expense', category:'娛樂', amount:1000, payer:'UGG', note:'電影＋晚餐'},
-  {id:nextId(), date:d(21), type:'expense', category:'醫療', amount:450,  payer:'INA', note:'感冒藥'},
-  {id:nextId(), date:d(9),  type:'expense', category:'現金', amount:1000, payer:'UGG', note:'提領零用現金'},
-];
-
+let transactions = [];
 let viewYear = Y, viewMonth = M;
 let currentDayStr = null;
 let formType = 'expense';
+let loading = true;
+
+/* ---- 從 Supabase 讀取全部紀錄 ---- */
+async function loadTransactions(){
+  const { data, error } = await sb.from(TABLE).select('*').order('date', {ascending:true});
+  if(error){
+    console.error(error);
+    alert('讀取資料失敗，請確認 Supabase 資料表與連線設定是否正確：\n' + error.message);
+    loading = false;
+    return;
+  }
+  transactions = data || [];
+  loading = false;
+  renderAll();
+  if(currentDayStr && document.getElementById('dayOverlay').classList.contains('open')){
+    renderDayList();
+  }
+}
 
 /* ================= 渲染 ================= */
 function renderAll(){
@@ -463,7 +472,15 @@ function renderSeal(){
     </div>`;
 }
 
-function settleAll(){
+async function settleAll(){
+  const unpaidIds = transactions.filter(t=>t.type==='debt' && t.status!=='settled').map(t=>t.id);
+  if(unpaidIds.length===0) return;
+  const { error } = await sb.from(TABLE).update({status:'settled'}).in('id', unpaidIds);
+  if(error){
+    console.error(error);
+    alert('結清失敗：' + error.message);
+    return;
+  }
   transactions.forEach(t=>{ if(t.type==='debt') t.status='settled'; });
   renderAll();
 }
@@ -606,7 +623,13 @@ function renderDayList(){
   }).join('');
 }
 
-function deleteTx(id){
+async function deleteTx(id){
+  const { error } = await sb.from(TABLE).delete().eq('id', id);
+  if(error){
+    console.error(error);
+    alert('刪除失敗：' + error.message);
+    return;
+  }
   transactions = transactions.filter(t=>t.id!==id);
   renderDayList();
   renderAll();
@@ -650,11 +673,11 @@ function openForm(dateStr, editId=null){
   }
 }
 
-function saveTransaction(e){
+async function saveTransaction(e){
   e.preventDefault();
   const editId = document.getElementById('fEditId').value;
   const date = document.getElementById('fDate').value;
-  const amount = document.getElementById('fAmount').value;
+  const amount = Number(document.getElementById('fAmount').value);
   const note = document.getElementById('fNote').value;
 
   let payload;
@@ -663,6 +686,7 @@ function saveTransaction(e){
       type:'expense', date, amount,
       category: document.getElementById('fCategory').value,
       payer: document.getElementById('fPayer').value,
+      lender:null, borrower:null, status:null,
       note
     };
   } else {
@@ -671,15 +695,29 @@ function saveTransaction(e){
       lender: document.getElementById('fLender').value,
       borrower: document.getElementById('fBorrower').value,
       category: document.getElementById('fDebtCategory').value,
+      payer:null,
       note, status:'unpaid'
     };
   }
 
+  const submitBtn = document.getElementById('fSubmitBtn');
+  const originalText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = '儲存中…';
+
   if(editId){
+    const { data, error } = await sb.from(TABLE).update(payload).eq('id', Number(editId)).select().single();
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
+    if(error){ console.error(error); alert('更新失敗：' + error.message); return; }
     const idx = transactions.findIndex(t=>t.id===Number(editId));
-    transactions[idx] = {...transactions[idx], ...payload};
+    transactions[idx] = data;
   } else {
-    transactions.push({id: nextId(), ...payload});
+    const { data, error } = await sb.from(TABLE).insert(payload).select().single();
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
+    if(error){ console.error(error); alert('新增失敗：' + error.message); return; }
+    transactions.push(data);
   }
 
   closeModal('formOverlay');
@@ -701,7 +739,7 @@ document.querySelectorAll('.overlay').forEach(ov=>{
   ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('open'); });
 });
 
-renderAll();
+loadTransactions();
 </script>
 </body>
 </html>
