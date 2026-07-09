@@ -88,7 +88,7 @@
 
   .cover-figure{
     margin-top:22px; padding-top:18px; border-top:1px dashed rgba(216,199,154,.35);
-    display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:14px;
+    display:flex; align-items:flex-end; justify-content:flex-end; flex-wrap:wrap; gap:14px;
   }
   .cover-figure .amount{
     font-size:38px; font-weight:700; letter-spacing:.02em;
@@ -196,6 +196,8 @@
     border:none; background:none; cursor:pointer; font-size:13px; color:var(--ink-soft); padding:4px;
   }
   .tx-actions button:hover{color:var(--seal-red);}
+  .tx-actions button.tx-undo-btn{color:var(--gold);}
+  .tx-actions button.tx-undo-btn:hover{color:var(--navy);}
   .tx-empty{padding:26px 0; text-align:center; color:var(--ink-soft); font-size:13px;}
 
   /* ---------- 本月收支明細 Modal ---------- */
@@ -293,10 +295,6 @@
       </div>
     </div>
     <div class="cover-figure">
-      <div>
-        <div class="amount-label">本月共同支出總額</div>
-        <div class="amount mono" id="monthTotal">NT$ 0</div>
-      </div>
       <button class="add-btn" onclick="openForm(todayStr())">＋ 新增一筆</button>
     </div>
   </div>
@@ -466,9 +464,15 @@ let currentDayStr = null;
 let formType = 'expense';
 let loading = true;
 
-// 「一鍵結清」復原機制：暫存結清前的一瞬間狀態
-let lastSettleBackup = null; // [{id, status}, ...]
+// 「一鍵結清」復原機制：暫存結清前的一瞬間狀態（id -> 原本的 status）
+let lastSettleBackup = new Map();
 let undoToastTimer = null;
+
+/* 若該筆紀錄剛被「一鍵結清」處理過、尚未復原，回傳單筆復原按鈕的 HTML */
+function undoBtnHtml(id){
+  if(!lastSettleBackup.has(id)) return '';
+  return `<button class="tx-undo-btn" title="復原這一筆" onclick="undoSettleOne(${id})">↺</button>`;
+}
 
 /* ---- 從 Supabase 讀取全部紀錄 ---- */
 async function loadTransactions(){
@@ -501,8 +505,6 @@ function monthTx(){
 
 function renderHero(){
   document.getElementById('monthLabelBtn').textContent = `${viewYear} 年 ${viewMonth+1} 月`;
-  const total = monthTx().filter(t=>t.type==='expense').reduce((s,t)=>s+Number(t.amount),0);
-  document.getElementById('monthTotal').textContent = money(total);
 }
 
 function netDebt(){
@@ -564,12 +566,10 @@ async function settleAll(){
   if(unsettled.length===0) return;
 
   // 誤觸防呆：一鍵結清前先請使用者二次確認
-  const confirmed = confirm(`確定要將本月共 ${unsettled.length} 筆未結清紀錄全部標記為「已結清」嗎？\n（結清後仍可在提示中點擊「復原」還原）`);
+  const confirmed = confirm(`確定要將本月共 ${unsettled.length} 筆未結清紀錄全部標記為「已結清」嗎？\n（結清後每一筆都可以個別點擊「復原」還原）`);
   if(!confirmed) return;
 
-  // 備份結清前一瞬間的狀態，供「復原」使用
-  const backup = unsettled.map(t=>({ id:t.id, status:t.status || 'unpaid' }));
-  const unsettledIds = backup.map(b=>b.id);
+  const unsettledIds = unsettled.map(t=>t.id);
 
   const { error } = await sb.from(TABLE).update({status:'settled'}).in('id', unsettledIds);
   if(error){
@@ -577,21 +577,26 @@ async function settleAll(){
     alert('結清失敗：' + error.message);
     return;
   }
-  transactions.forEach(t=>{ if(unsettledIds.includes(t.id)) t.status='settled'; });
-  lastSettleBackup = backup;
+
+  // 建立新的備份 Map：這次結清會覆蓋掉上一次尚未復原的備份
+  lastSettleBackup = new Map();
+  unsettled.forEach(t=>{ lastSettleBackup.set(t.id, t.status || 'unpaid'); });
+
+  transactions.forEach(t=>{ if(lastSettleBackup.has(t.id)) t.status='settled'; });
   renderAll();
   if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
   if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
-  showUndoToast(backup.length);
+  showUndoToast(lastSettleBackup.size);
 }
 
-/* ---- 復原（Undo）：把上一次一鍵結清的紀錄狀態改回原本的狀態 ---- */
+/* ---- 復原（Undo）：把結清的紀錄狀態改回原本的狀態 ---- */
 function showUndoToast(count){
+  if(count<=0){ hideUndoToast(); return; }
   const toast = document.getElementById('undoToast');
   document.getElementById('undoToastText').textContent = `已結清 ${count} 筆紀錄`;
   toast.classList.add('show');
   if(undoToastTimer) clearTimeout(undoToastTimer);
-  // 10 秒後自動隱藏提示（但復原資料仍保留至下一次結清前，仍可從程式邏輯復原）
+  // 10 秒後自動隱藏提示（但每一筆紀錄的復原按鈕仍會保留，直到下一次結清才會覆蓋）
   undoToastTimer = setTimeout(hideUndoToast, 10000);
 }
 
@@ -600,17 +605,17 @@ function hideUndoToast(){
   if(undoToastTimer){ clearTimeout(undoToastTimer); undoToastTimer=null; }
 }
 
+/* 一次復原「這一次一鍵結清」所有尚未個別復原的紀錄 */
 async function undoSettle(){
-  if(!lastSettleBackup || lastSettleBackup.length===0){
+  if(!lastSettleBackup || lastSettleBackup.size===0){
     hideUndoToast();
     return;
   }
-  const backup = lastSettleBackup;
 
   // 依照原本的 status 分組，減少 API 呼叫次數
   const groups = {};
-  backup.forEach(b=>{
-    (groups[b.status] = groups[b.status] || []).push(b.id);
+  lastSettleBackup.forEach((status, id)=>{
+    (groups[status] = groups[status] || []).push(id);
   });
 
   for(const status of Object.keys(groups)){
@@ -623,14 +628,40 @@ async function undoSettle(){
     }
   }
 
-  const statusMap = {};
-  backup.forEach(b=>{ statusMap[b.id] = b.status; });
   transactions.forEach(t=>{
-    if(Object.prototype.hasOwnProperty.call(statusMap, t.id)) t.status = statusMap[t.id];
+    if(lastSettleBackup.has(t.id)) t.status = lastSettleBackup.get(t.id);
   });
 
-  lastSettleBackup = null;
+  lastSettleBackup = new Map();
   hideUndoToast();
+  renderAll();
+  if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
+  if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
+}
+
+/* 只復原單獨一筆紀錄（畫面上每筆明細各自的「復原」按鈕） */
+async function undoSettleOne(id){
+  if(!lastSettleBackup.has(id)) return;
+  const originalStatus = lastSettleBackup.get(id);
+
+  const { error } = await sb.from(TABLE).update({status:originalStatus}).eq('id', id);
+  if(error){
+    console.error(error);
+    alert('復原失敗：' + error.message);
+    return;
+  }
+
+  const t = transactions.find(x=>x.id===id);
+  if(t) t.status = originalStatus;
+  lastSettleBackup.delete(id);
+
+  if(lastSettleBackup.size===0){
+    hideUndoToast();
+  } else {
+    // 更新提示文字裡剩餘的筆數
+    document.getElementById('undoToastText').textContent = `已結清 ${lastSettleBackup.size} 筆紀錄`;
+  }
+
   renderAll();
   if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
   if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
@@ -679,6 +710,7 @@ function renderSummaryList(){
         </div>
         <div class="tx-amt mono">${money(t.amount)}</div>
         <div class="tx-actions">
+          ${undoBtnHtml(t.id)}
           <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
           <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
         </div>
@@ -731,6 +763,7 @@ function renderSummaryList(){
         </div>
         <div class="tx-amt mono">${money(t.amount)}</div>
         <div class="tx-actions">
+          ${undoBtnHtml(t.id)}
           <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
           <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
         </div>
@@ -838,6 +871,7 @@ function renderDayList(){
         </div>
         <div class="tx-amt mono">${money(t.amount)}</div>
         <div class="tx-actions">
+          ${undoBtnHtml(t.id)}
           <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
           <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
         </div>
@@ -853,6 +887,7 @@ function renderDayList(){
         </div>
         <div class="tx-amt mono">${money(t.amount)}</div>
         <div class="tx-actions">
+          ${undoBtnHtml(t.id)}
           <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
           <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
         </div>
@@ -869,6 +904,7 @@ async function deleteTx(id){
     return;
   }
   transactions = transactions.filter(t=>t.id!==id);
+  if(lastSettleBackup.has(id)) lastSettleBackup.delete(id);
   if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
   if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
   renderAll();
