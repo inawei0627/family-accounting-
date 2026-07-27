@@ -162,6 +162,58 @@
   .dot.expense{background:var(--navy);}
   .dot.debt{background:var(--seal-red);}
 
+  /* ---------- Modal 內月份導覽（明細欄月份選擇） ---------- */
+  .modal-month-nav{display:flex; align-items:center; gap:6px; position:relative;}
+  .modal-month-nav button.mm-arrow{
+    background:var(--paper); border:1px solid var(--paper-line); color:var(--navy);
+    width:26px; height:26px; border-radius:7px; cursor:pointer; font-size:13px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .modal-month-nav button.mm-arrow:hover{background:var(--gold-soft);}
+  .modal-month-nav .mm-label{
+    font-family:'Noto Serif TC',serif; font-size:13px; background:none; border:none; cursor:pointer;
+    color:var(--navy); padding:4px 6px; border-radius:6px;
+  }
+  .modal-month-nav .mm-label:hover{background:var(--paper);}
+  .modal-month-picker{
+    display:none; gap:6px; position:absolute; top:34px; right:0; z-index:10;
+    background:var(--white); border-radius:10px; padding:9px; box-shadow:var(--shadow);
+  }
+  .modal-month-picker.open{display:flex;}
+  .modal-month-picker select{
+    padding:6px 8px; border-radius:7px; border:1px solid var(--paper-line); background:var(--paper);
+    font-size:12.5px; color:var(--ink); font-family:'Noto Sans TC', sans-serif;
+  }
+
+  /* ---------- 結清日期／方式 標記 ---------- */
+  .settle-meta{font-size:11px; color:var(--jade); margin-top:1px;}
+
+  /* ---------- 結清方式表單 Modal ---------- */
+  .settle-summary{
+    background:var(--paper); border-radius:10px; padding:12px 14px; margin-bottom:16px;
+    font-size:13px; color:var(--ink-soft); line-height:1.6;
+  }
+  .settle-summary b{color:var(--navy);}
+  .method-toggle{display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;}
+  .method-toggle button{
+    flex:1; min-width:80px; padding:9px; border-radius:9px; border:1.5px solid var(--paper-line); background:none;
+    font-size:13px; cursor:pointer; color:var(--ink-soft); font-weight:600;
+  }
+  .method-toggle button.active{border-color:var(--jade); color:var(--jade); background:var(--jade-soft);}
+
+  /* ---------- 循環代墊欄位 ---------- */
+  .recurring-toggle{
+    display:flex; align-items:center; gap:8px; margin:2px 0 14px; padding:9px 11px;
+    background:var(--paper); border-radius:9px; cursor:pointer; font-size:13px; color:var(--ink);
+  }
+  .recurring-toggle input{width:16px; height:16px; accent-color:var(--jade); cursor:pointer;}
+  .recurring-fields{display:none; padding:2px 0 4px;}
+  .recurring-fields.show{display:block;}
+  .recurring-tag{
+    display:inline-block; font-size:10.5px; color:var(--jade); background:var(--jade-soft);
+    padding:1px 6px; border-radius:6px; margin-left:5px; vertical-align:middle;
+  }
+
   /* ---------- Modal ---------- */
   .overlay{
     position:fixed; inset:0; background:rgba(20,26,38,.55); backdrop-filter:blur(2px);
@@ -333,7 +385,18 @@
   <div class="modal">
     <div class="modal-head">
       <h3 id="summaryModalTitle">本月收支明細</h3>
-      <button class="modal-close" onclick="closeModal('summaryOverlay')">✕</button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="modal-month-nav">
+          <button class="mm-arrow" onclick="changeSummaryMonth(-1)">‹</button>
+          <button class="mm-label" id="summaryMonthLabel" onclick="toggleSummaryPicker(event)"></button>
+          <button class="mm-arrow" onclick="changeSummaryMonth(1)">›</button>
+          <div class="modal-month-picker" id="summaryMonthPicker">
+            <select id="summaryPickYear" onchange="jumpSummaryPicker()"></select>
+            <select id="summaryPickMonth" onchange="jumpSummaryPicker()"></select>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeModal('summaryOverlay')">✕</button>
+      </div>
     </div>
     <div class="modal-body">
       <div id="summaryTxList"></div>
@@ -355,6 +418,7 @@
       </div>
       <form id="txForm" onsubmit="saveTransaction(event)">
         <input type="hidden" id="fEditId">
+        <input type="hidden" id="fRecurringGroup">
         <div class="field">
           <label>日期</label>
           <input type="date" id="fDate" required>
@@ -381,6 +445,24 @@
                 <option value="INA">INA</option>
               </select>
             </div>
+          </div>
+
+          <label class="recurring-toggle" id="recurringToggleLabel">
+            <input type="checkbox" id="fRecurring" onchange="toggleRecurringFields()">
+            <span>🔁 設定為定期循環代墊（例如每月固定代墊房租）</span>
+          </label>
+          <div class="recurring-fields" id="recurringFields">
+            <div class="two-col">
+              <div class="field">
+                <label>每月幾號代墊</label>
+                <select id="fRecurringDay"></select>
+              </div>
+              <div class="field">
+                <label>循環至（含當月）</label>
+                <input type="month" id="fRecurringUntil">
+              </div>
+            </div>
+            <div class="hint" style="text-align:left; margin-top:-6px;">會從這筆紀錄的年月開始，每月同一天自動建立一筆代墊，直到你設定的年月為止。</div>
           </div>
         </div>
 
@@ -432,6 +514,38 @@
   </div>
 </div>
 
+<!-- Modal: 一鍵結清 - 填寫結清方式與日期 -->
+<div class="overlay" id="settleOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>結清本月債務</h3>
+      <button class="modal-close" onclick="closeModal('settleOverlay')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="settle-summary" id="settleSummaryText"></div>
+      <form id="settleForm" onsubmit="confirmSettle(event)">
+        <div class="field">
+          <label>結清方式</label>
+          <div class="method-toggle" id="methodToggle">
+            <button type="button" data-v="匯款" onclick="pickSettleMethod('匯款')">💸 匯款</button>
+            <button type="button" data-v="現金" onclick="pickSettleMethod('現金')">💵 現金</button>
+            <button type="button" data-v="其他" onclick="pickSettleMethod('其他')">📎 其他</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>結清日期</label>
+          <input type="date" id="settleDate" required>
+        </div>
+        <div class="field">
+          <label>備註（選填）</label>
+          <input type="text" id="settleNote" placeholder="例如：已用玉山銀行轉帳">
+        </div>
+        <button type="submit" class="form-submit">確認結清</button>
+      </form>
+    </div>
+  </div>
+</div>
+
 <!-- Undo Toast：一鍵結清後的復原提示 -->
 <div class="undo-toast" id="undoToast">
   <span class="ut-text" id="undoToastText">已結清 0 筆紀錄</span>
@@ -465,13 +579,13 @@ let formType = 'expense';
 let loading = true;
 
 // 「一鍵結清」復原機制：暫存結清前的一瞬間狀態（id -> 原本的 status）
-let lastSettleBackup = new Map();
+let lastSettledIds = [];
 let undoToastTimer = null;
 
-/* 若該筆紀錄剛被「一鍵結清」處理過、尚未復原，回傳單筆復原按鈕的 HTML */
-function undoBtnHtml(id){
-  if(!lastSettleBackup.has(id)) return '';
-  return `<button class="tx-undo-btn" title="復原這一筆" onclick="undoSettleOne(${id})">↺</button>`;
+/* 固定復原按鈕：只要該筆紀錄目前是「已結清」，任何人、任何時候都能點擊復原（不依賴當次瀏覽器狀態） */
+function undoBtnHtml(t){
+  if(t.status!=='settled') return '';
+  return `<button class="tx-undo-btn" title="復原這一筆結清" onclick="undoSettleOne(${t.id})">↺</button>`;
 }
 
 /* ---- 從 Supabase 讀取全部紀錄 ---- */
@@ -498,22 +612,25 @@ function renderAll(){
   renderCalendar();
 }
 
-function monthTx(){
-  const prefix = `${viewYear}-${pad(viewMonth+1)}`;
+function monthTxFor(y, m){
+  const prefix = `${y}-${pad(m+1)}`;
   return transactions.filter(t => t.date.startsWith(prefix));
+}
+function monthTx(){
+  return monthTxFor(viewYear, viewMonth);
 }
 
 function renderHero(){
   document.getElementById('monthLabelBtn').textContent = `${viewYear} 年 ${viewMonth+1} 月`;
 }
 
-function netDebt(){
+function netDebtForMonth(y, m){
   // 正值代表「UGG」欠「INA」；負值代表「INA」欠「UGG」
-  // 「代墊」與「借款」合併計算為最終互欠金額：
+  // 「代墊」與「借款」合併計算為該月最終互欠金額（每月分別結清，因此只看該月未結清紀錄）：
   //   借款：出借人(lender) 借給 借款人(borrower) => borrower 欠 lender 這筆錢
   //   代墊：付款人(payer) 幫對方代墊 => 對方（非付款人）欠 payer 這筆錢
   let net = 0;
-  transactions.forEach(t=>{
+  monthTxFor(y, m).forEach(t=>{
     if(t.status === 'settled') return; // 已結清的紀錄不列入淨額計算
     if(t.type === 'debt'){
       if(t.lender==='INA' && t.borrower==='UGG') net += Number(t.amount);
@@ -527,22 +644,22 @@ function netDebt(){
 }
 
 function renderSeal(){
-  const net = netDebt();
+  const net = netDebtForMonth(viewYear, viewMonth);
   const row = document.getElementById('sealRow');
   const list = monthTx();
   const totalExpense = list.filter(t=>t.type==='expense').reduce((s,t)=>s+Number(t.amount),0);
   const totalDebt = list.filter(t=>t.type==='debt').reduce((s,t)=>s+Number(t.amount),0);
 
-  let stampClass='even', label='目前互不相欠', sub='雙方帳務已結清';
-  if(net > 0){ stampClass='owe'; label='UGG 欠 INA'; sub = money(net); }
-  else if(net < 0){ stampClass='owed'; label='INA 欠 UGG'; sub = money(-net); }
+  let stampClass='even', label=`${viewYear}年${viewMonth+1}月 目前互不相欠`, sub='本月帳務已結清';
+  if(net > 0){ stampClass='owe'; label='本月 UGG 欠 INA'; sub = money(net); }
+  else if(net < 0){ stampClass='owed'; label='本月 INA 欠 UGG'; sub = money(-net); }
 
   row.innerHTML = `
     <div class="seal-card" onclick="openSummaryModal()">
       <div class="seal-stamp ${stampClass}">${net===0 ? '結清' : '欠款'}</div>
       <div class="seal-main">
         <div class="seal-text">
-          <div class="t1">淨債務餘額</div>
+          <div class="t1">本月淨債務餘額</div>
           <div class="t2">${label}${net!==0 ? ' <span class="val">'+sub+'</span>' : ''}</div>
         </div>
         <div class="seal-stats">
@@ -556,37 +673,68 @@ function renderSeal(){
           </div>
         </div>
       </div>
-      ${net!==0 ? '<button class="settle-btn" onclick="event.stopPropagation(); settleAll()">一鍵結清</button>' : ''}
+      ${net!==0 ? '<button class="settle-btn" onclick="event.stopPropagation(); settleAll()">一鍵結清本月</button>' : ''}
     </div>`;
 }
 
-async function settleAll(){
-  // 代墊與借款都計入淨債務，因此一鍵結清需同時處理兩種類型
-  const unsettled = transactions.filter(t=>t.status!=='settled');
-  if(unsettled.length===0) return;
+/* ================= 一鍵結清（僅限單一月份） ================= */
+let pendingSettleList = [];
+let pendingSettleMethod = '匯款';
 
-  // 誤觸防呆：一鍵結清前先請使用者二次確認
-  const confirmed = confirm(`確定要將本月共 ${unsettled.length} 筆未結清紀錄全部標記為「已結清」嗎？\n（結清後每一筆都可以個別點擊「復原」還原）`);
-  if(!confirmed) return;
+function settleAll(){
+  // 只結清「目前檢視月份」尚未結清的紀錄，符合每月分別結清的規則
+  pendingSettleList = monthTx().filter(t=>t.status!=='settled');
+  if(pendingSettleList.length===0) return;
+  openSettleModal(viewYear, viewMonth, pendingSettleList);
+}
 
-  const unsettledIds = unsettled.map(t=>t.id);
+function openSettleModal(y, m, list){
+  pendingSettleList = list;
+  const totalExpense = list.filter(t=>t.type==='expense').reduce((s,t)=>s+Number(t.amount),0);
+  const totalDebt = list.filter(t=>t.type==='debt').reduce((s,t)=>s+Number(t.amount),0);
+  document.getElementById('settleSummaryText').innerHTML =
+    `即將結清 <b>${y} 年 ${m+1} 月</b> 共 <b>${list.length}</b> 筆未結清紀錄<br>`+
+    `（代墊 ${money(totalExpense)}・借款 ${money(totalDebt)}）`;
+  pendingSettleMethod = '匯款';
+  document.querySelectorAll('#methodToggle button').forEach(b=>b.classList.toggle('active', b.dataset.v==='匯款'));
+  document.getElementById('settleDate').value = todayStr();
+  document.getElementById('settleNote').value = '';
+  document.getElementById('settleOverlay').classList.add('open');
+}
 
-  const { error } = await sb.from(TABLE).update({status:'settled'}).in('id', unsettledIds);
+function pickSettleMethod(v){
+  pendingSettleMethod = v;
+  document.querySelectorAll('#methodToggle button').forEach(b=>b.classList.toggle('active', b.dataset.v===v));
+}
+
+async function confirmSettle(e){
+  e.preventDefault();
+  if(pendingSettleList.length===0){ closeModal('settleOverlay'); return; }
+
+  const settleDate = document.getElementById('settleDate').value;
+  const note = document.getElementById('settleNote').value;
+  const settleMethod = note ? `${pendingSettleMethod}・${note}` : pendingSettleMethod;
+  const ids = pendingSettleList.map(t=>t.id);
+
+  const { error } = await sb.from(TABLE)
+    .update({ status:'settled', settle_date: settleDate, settle_method: settleMethod })
+    .in('id', ids);
   if(error){
     console.error(error);
-    alert('結清失敗：' + error.message);
+    alert('結清失敗：' + error.message + '\n（若欄位不存在，請先在 Supabase 資料表新增 settle_date / settle_method 欄位）');
     return;
   }
 
-  // 建立新的備份 Map：這次結清會覆蓋掉上一次尚未復原的備份
-  lastSettleBackup = new Map();
-  unsettled.forEach(t=>{ lastSettleBackup.set(t.id, t.status || 'unpaid'); });
+  transactions.forEach(t=>{
+    if(ids.includes(t.id)){ t.status='settled'; t.settle_date=settleDate; t.settle_method=settleMethod; }
+  });
+  lastSettledIds = ids;
 
-  transactions.forEach(t=>{ if(lastSettleBackup.has(t.id)) t.status='settled'; });
+  closeModal('settleOverlay');
   renderAll();
   if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
   if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
-  showUndoToast(lastSettleBackup.size);
+  showUndoToast(ids.length);
 }
 
 /* ---- 復原（Undo）：把結清的紀錄狀態改回原本的狀態 ---- */
@@ -605,77 +753,115 @@ function hideUndoToast(){
   if(undoToastTimer){ clearTimeout(undoToastTimer); undoToastTimer=null; }
 }
 
-/* 一次復原「這一次一鍵結清」所有尚未個別復原的紀錄 */
+/* 復原「剛才那次一鍵結清」的所有紀錄（來自結清提示 Toast） */
 async function undoSettle(){
-  if(!lastSettleBackup || lastSettleBackup.size===0){
+  if(!lastSettledIds || lastSettledIds.length===0){
     hideUndoToast();
     return;
   }
-
-  // 依照原本的 status 分組，減少 API 呼叫次數
-  const groups = {};
-  lastSettleBackup.forEach((status, id)=>{
-    (groups[status] = groups[status] || []).push(id);
-  });
-
-  for(const status of Object.keys(groups)){
-    const ids = groups[status];
-    const { error } = await sb.from(TABLE).update({status}).in('id', ids);
-    if(error){
-      console.error(error);
-      alert('復原失敗：' + error.message);
-      return;
-    }
-  }
-
-  transactions.forEach(t=>{
-    if(lastSettleBackup.has(t.id)) t.status = lastSettleBackup.get(t.id);
-  });
-
-  lastSettleBackup = new Map();
+  await revertSettledIds(lastSettledIds);
+  lastSettledIds = [];
   hideUndoToast();
-  renderAll();
-  if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
-  if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
 }
 
-/* 只復原單獨一筆紀錄（畫面上每筆明細各自的「復原」按鈕） */
+/* 復原單獨一筆紀錄：畫面上每一筆已結清明細都會固定顯示「復原」按鈕，
+   不論當初是誰、在哪個裝置上按下結清，任何人隨時都能點擊復原。 */
 async function undoSettleOne(id){
-  if(!lastSettleBackup.has(id)) return;
-  const originalStatus = lastSettleBackup.get(id);
+  await revertSettledIds([id]);
+  lastSettledIds = lastSettledIds.filter(x=>x!==id);
+  if(lastSettledIds.length===0) hideUndoToast();
+  else document.getElementById('undoToastText').textContent = `已結清 ${lastSettledIds.length} 筆紀錄`;
+}
 
-  const { error } = await sb.from(TABLE).update({status:originalStatus}).eq('id', id);
+/* 共用的復原動作：把指定 id 清單的紀錄改回「未結清」，並清除結清方式／結清日期 */
+async function revertSettledIds(ids){
+  const { error } = await sb.from(TABLE)
+    .update({ status:'unpaid', settle_date:null, settle_method:null })
+    .in('id', ids);
   if(error){
     console.error(error);
     alert('復原失敗：' + error.message);
     return;
   }
-
-  const t = transactions.find(x=>x.id===id);
-  if(t) t.status = originalStatus;
-  lastSettleBackup.delete(id);
-
-  if(lastSettleBackup.size===0){
-    hideUndoToast();
-  } else {
-    // 更新提示文字裡剩餘的筆數
-    document.getElementById('undoToastText').textContent = `已結清 ${lastSettleBackup.size} 筆紀錄`;
-  }
-
+  transactions.forEach(t=>{
+    if(ids.includes(t.id)){ t.status='unpaid'; t.settle_date=null; t.settle_method=null; }
+  });
   renderAll();
   if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
   if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
 }
 
 /* ================= Modal：本月收支明細（藍框卡片） ================= */
+/* 明細彈窗自己的年月狀態，可獨立於首頁月曆切換瀏覽不同月份的明細 */
+let summaryYear = Y, summaryMonth = M;
+
+function settleMetaHtml(t){
+  if(t.status!=='settled') return '';
+  const d = t.settle_date ? t.settle_date.slice(5).replace('-','/') : '';
+  const method = t.settle_method || '';
+  const parts = [d, method].filter(Boolean).join('・');
+  return `<div class="settle-meta">✓ 已結清${parts?'・'+parts:''}</div>`;
+}
+
+function recurringTagHtml(t){
+  return t.recurring_group ? '<span class="recurring-tag">🔁 循環代墊</span>' : '';
+}
+
 function openSummaryModal(){
-  document.getElementById('summaryModalTitle').textContent = `${viewYear} 年 ${viewMonth+1} 月 收支明細`;
+  summaryYear = viewYear; summaryMonth = viewMonth;
   renderSummaryList();
   document.getElementById('summaryOverlay').classList.add('open');
 }
 
+function changeSummaryMonth(delta){
+  summaryMonth += delta;
+  if(summaryMonth<0){summaryMonth=11; summaryYear--;}
+  if(summaryMonth>11){summaryMonth=0; summaryYear++;}
+  renderSummaryList();
+}
+
+function toggleSummaryPicker(e){
+  e.stopPropagation();
+  const p = document.getElementById('summaryMonthPicker');
+  const willOpen = !p.classList.contains('open');
+  if(willOpen){
+    const ySel = document.getElementById('summaryPickYear');
+    const mSel = document.getElementById('summaryPickMonth');
+    ySel.innerHTML = '';
+    for(let y=summaryYear-6; y<=summaryYear+6; y++){
+      ySel.innerHTML += `<option value="${y}" ${y===summaryYear?'selected':''}>${y} 年</option>`;
+    }
+    mSel.innerHTML = '';
+    for(let m=0;m<12;m++){
+      mSel.innerHTML += `<option value="${m}" ${m===summaryMonth?'selected':''}>${m+1} 月</option>`;
+    }
+    p.classList.add('open');
+  } else {
+    p.classList.remove('open');
+  }
+}
+
+function jumpSummaryPicker(){
+  summaryYear = Number(document.getElementById('summaryPickYear').value);
+  summaryMonth = Number(document.getElementById('summaryPickMonth').value);
+  document.getElementById('summaryMonthPicker').classList.remove('open');
+  renderSummaryList();
+}
+
+document.addEventListener('click', (e)=>{
+  const picker = document.getElementById('summaryMonthPicker');
+  const btn = document.getElementById('summaryMonthLabel');
+  if(picker && picker.classList.contains('open') && !picker.contains(e.target) && e.target!==btn){
+    picker.classList.remove('open');
+  }
+});
+
 function renderSummaryList(){
-  const list = monthTx();
+  document.getElementById('summaryModalTitle').textContent = `${summaryYear} 年 ${summaryMonth+1} 月 收支明細`;
+  document.getElementById('summaryMonthLabel').textContent = `${summaryYear} 年 ${summaryMonth+1} 月`;
+
+  const list = monthTxFor(summaryYear, summaryMonth);
+  const net = netDebtForMonth(summaryYear, summaryMonth);
   const expenses = list.filter(t=>t.type==='expense').slice().sort((a,b)=> a.date<b.date?1:-1);
   const debts = list.filter(t=>t.type==='debt').slice().sort((a,b)=> a.date<b.date?1:-1);
   const totalExpense = expenses.reduce((s,t)=>s+Number(t.amount),0);
@@ -693,6 +879,10 @@ function renderSummaryList(){
       </div>
     </div>`;
 
+  html += net===0
+    ? `<div class="hint" style="margin:0 0 6px;">本月未結清淨額：互不相欠</div>`
+    : `<div class="hint" style="margin:0 0 6px;">本月未結清淨額：${net>0?'UGG 欠 INA':'INA 欠 UGG'} ${money(Math.abs(net))}</div>`;
+
   html += `<div class="summary-group-title">代墊明細</div>`;
 
   if(expenses.length===0){
@@ -702,15 +892,16 @@ function renderSummaryList(){
     const renderExpenseItem = t=>{
       const settled = t.status==='settled';
       return `
-      <div class="tx-item" style="${settled?'opacity:.5;':''}">
+      <div class="tx-item" style="${settled?'opacity:.6;':''}">
         <div class="tx-icon type-expense">${CATEGORY_ICON[t.category]||'📎'}</div>
         <div class="tx-mid">
-          <div class="name">${t.category}${t.note?'・'+t.note:''}${settled?'（已結清）':''}</div>
+          <div class="name">${t.category}${t.note?'・'+t.note:''}${recurringTagHtml(t)}</div>
           <div class="meta">${t.date.slice(5)}・${t.payer} 支付</div>
+          ${settleMetaHtml(t)}
         </div>
         <div class="tx-amt mono">${money(t.amount)}</div>
         <div class="tx-actions">
-          ${undoBtnHtml(t.id)}
+          ${undoBtnHtml(t)}
           <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
           <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
         </div>
@@ -755,15 +946,16 @@ function renderSummaryList(){
     : debts.map(t=>{
         const settled = t.status==='settled';
         return `
-      <div class="tx-item" style="${settled?'opacity:.5;':''}">
+      <div class="tx-item" style="${settled?'opacity:.6;':''}">
         <div class="tx-icon type-debt">${CATEGORY_ICON[t.category]||'🖋'}</div>
         <div class="tx-mid">
-          <div class="name">${t.lender} 借給 ${t.borrower}${settled?'（已結清）':''}</div>
+          <div class="name">${t.lender} 借給 ${t.borrower}</div>
           <div class="meta">${t.date.slice(5)}・${t.category?t.category+'・':''}${t.note||'借款'}</div>
+          ${settleMetaHtml(t)}
         </div>
         <div class="tx-amt mono">${money(t.amount)}</div>
         <div class="tx-actions">
-          ${undoBtnHtml(t.id)}
+          ${undoBtnHtml(t)}
           <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
           <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
         </div>
@@ -863,15 +1055,16 @@ function renderDayList(){
     if(t.type==='expense'){
       const settled = t.status==='settled';
       return `
-      <div class="tx-item" style="${settled?'opacity:.5;':''}">
+      <div class="tx-item" style="${settled?'opacity:.6;':''}">
         <div class="tx-icon type-expense">${CATEGORY_ICON[t.category]||'📎'}</div>
         <div class="tx-mid">
-          <div class="name">${t.category}${t.note?'・'+t.note:''}${settled?'（已結清）':''}</div>
+          <div class="name">${t.category}${t.note?'・'+t.note:''}${recurringTagHtml(t)}</div>
           <div class="meta">${t.payer} 支付</div>
+          ${settleMetaHtml(t)}
         </div>
         <div class="tx-amt mono">${money(t.amount)}</div>
         <div class="tx-actions">
-          ${undoBtnHtml(t.id)}
+          ${undoBtnHtml(t)}
           <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
           <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
         </div>
@@ -879,15 +1072,16 @@ function renderDayList(){
     } else {
       const settled = t.status==='settled';
       return `
-      <div class="tx-item" style="${settled?'opacity:.5;':''}">
+      <div class="tx-item" style="${settled?'opacity:.6;':''}">
         <div class="tx-icon type-debt">${CATEGORY_ICON[t.category]||'🖋'}</div>
         <div class="tx-mid">
-          <div class="name">${t.lender} 借給 ${t.borrower}${settled?'（已結清）':''}</div>
+          <div class="name">${t.lender} 借給 ${t.borrower}</div>
           <div class="meta">${t.category?t.category+'・':''}${t.note||'借款'}</div>
+          ${settleMetaHtml(t)}
         </div>
         <div class="tx-amt mono">${money(t.amount)}</div>
         <div class="tx-actions">
-          ${undoBtnHtml(t.id)}
+          ${undoBtnHtml(t)}
           <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
           <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
         </div>
@@ -904,7 +1098,7 @@ async function deleteTx(id){
     return;
   }
   transactions = transactions.filter(t=>t.id!==id);
-  if(lastSettleBackup.has(id)) lastSettleBackup.delete(id);
+  lastSettledIds = lastSettledIds.filter(x=>x!==id);
   if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
   if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
   renderAll();
@@ -919,10 +1113,29 @@ function setFormType(type){
   document.getElementById('debtFields').style.display = type==='debt' ? 'block' : 'none';
 }
 
+/* 產生「每月幾號」下拉選單（1~31 號） */
+function fillRecurringDayOptions(selectedDay){
+  const sel = document.getElementById('fRecurringDay');
+  sel.innerHTML = '';
+  for(let d=1; d<=31; d++){
+    sel.innerHTML += `<option value="${d}" ${d===selectedDay?'selected':''}>${d} 號</option>`;
+  }
+}
+
+function toggleRecurringFields(){
+  const on = document.getElementById('fRecurring').checked;
+  document.getElementById('recurringFields').classList.toggle('show', on);
+}
+
 function openForm(dateStr, editId=null){
   document.getElementById('formOverlay').classList.add('open');
   document.getElementById('fDate').value = dateStr;
   document.getElementById('fEditId').value = editId ?? '';
+  document.getElementById('fRecurringGroup').value = '';
+  document.getElementById('fRecurring').checked = false;
+  toggleRecurringFields();
+  fillRecurringDayOptions(Number(dateStr.split('-')[2]));
+  document.getElementById('fRecurringUntil').value = dateStr.slice(0,7);
 
   if(editId){
     const t = transactions.find(x=>x.id===editId);
@@ -939,13 +1152,34 @@ function openForm(dateStr, editId=null){
       document.getElementById('fBorrower').value = t.borrower;
       document.getElementById('fDebtCategory').value = t.category || '其他';
     }
+    // 編輯既有紀錄時，只針對這一筆做修改，不重新設定循環規則
+    document.getElementById('recurringToggleLabel').style.display = 'none';
   } else {
     document.getElementById('formModalTitle').textContent = '新增紀錄';
     document.getElementById('fSubmitBtn').textContent = '儲存紀錄';
     document.getElementById('txForm').reset();
     document.getElementById('fDate').value = dateStr;
+    fillRecurringDayOptions(Number(dateStr.split('-')[2]));
+    document.getElementById('fRecurringUntil').value = dateStr.slice(0,7);
     setFormType('expense');
+    document.getElementById('recurringToggleLabel').style.display = 'flex';
   }
+}
+
+/* 依照「每月幾號」與「循環至」年月，從 fromDate 所在月份開始，逐月產生日期字串清單 */
+function buildRecurringDates(fromDate, day, untilYearMonth){
+  const [fy, fm] = fromDate.split('-').map(Number);
+  const [uy, um] = untilYearMonth.split('-').map(Number);
+  const dates = [];
+  let y = fy, m = fm; // m 為 1~12
+  while(y < uy || (y === uy && m <= um)){
+    const lastDay = new Date(y, m, 0).getDate();
+    const useDay = Math.min(day, lastDay); // 若該月天數不足（如 2 月沒有 30 號），自動使用當月最後一天
+    dates.push(`${y}-${pad(m)}-${pad(useDay)}`);
+    m++;
+    if(m>12){ m=1; y++; }
+  }
+  return dates;
 }
 
 async function saveTransaction(e){
@@ -959,18 +1193,20 @@ async function saveTransaction(e){
   const existing = editId ? transactions.find(t=>t.id===Number(editId)) : null;
   const status = existing ? (existing.status || 'unpaid') : 'unpaid';
 
-  let payload;
-  if(formType==='expense'){
-    payload = {
-      type:'expense', date, amount,
-      category: document.getElementById('fCategory').value,
-      payer: document.getElementById('fPayer').value,
-      lender:null, borrower:null,
-      note, status
-    };
-  } else {
-    payload = {
-      type:'debt', date, amount,
+  const isRecurring = !editId && formType==='expense' && document.getElementById('fRecurring').checked;
+
+  function buildPayload(d){
+    if(formType==='expense'){
+      return {
+        type:'expense', date:d, amount,
+        category: document.getElementById('fCategory').value,
+        payer: document.getElementById('fPayer').value,
+        lender:null, borrower:null,
+        note, status
+      };
+    }
+    return {
+      type:'debt', date:d, amount,
       lender: document.getElementById('fLender').value,
       borrower: document.getElementById('fBorrower').value,
       category: document.getElementById('fDebtCategory').value,
@@ -984,7 +1220,35 @@ async function saveTransaction(e){
   submitBtn.disabled = true;
   submitBtn.textContent = '儲存中…';
 
-  if(editId){
+  if(isRecurring){
+    // 循環代墊：從這筆紀錄所在月份開始，每月同一天，直到指定年月為止，批次建立多筆紀錄
+    const day = Number(document.getElementById('fRecurringDay').value);
+    const until = document.getElementById('fRecurringUntil').value;
+    if(!until){
+      submitBtn.disabled = false; submitBtn.textContent = originalText;
+      alert('請選擇循環至哪一個年月');
+      return;
+    }
+    const dates = buildRecurringDates(date, day, until);
+    if(dates.length===0){
+      submitBtn.disabled = false; submitBtn.textContent = originalText;
+      alert('循環至的年月必須等於或晚於這筆紀錄的年月');
+      return;
+    }
+    const groupId = 'rec_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+    const payloads = dates.map(d => ({ ...buildPayload(d), recurring_group: groupId }));
+
+    const { data, error } = await sb.from(TABLE).insert(payloads).select();
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
+    if(error){
+      console.error(error);
+      alert('建立循環代墊失敗：' + error.message + '\n（若欄位不存在，請先在 Supabase 資料表新增 recurring_group 欄位）');
+      return;
+    }
+    transactions.push(...data);
+  } else if(editId){
+    const payload = buildPayload(date);
     const { data, error } = await sb.from(TABLE).update(payload).eq('id', Number(editId)).select().single();
     submitBtn.disabled = false;
     submitBtn.textContent = originalText;
@@ -992,6 +1256,7 @@ async function saveTransaction(e){
     const idx = transactions.findIndex(t=>t.id===Number(editId));
     transactions[idx] = data;
   } else {
+    const payload = buildPayload(date);
     const { data, error } = await sb.from(TABLE).insert(payload).select().single();
     submitBtn.disabled = false;
     submitBtn.textContent = originalText;
