@@ -122,14 +122,11 @@
   .seal-stamp.owe{color:var(--seal-red); background:var(--seal-red-soft);}
   .seal-stamp.owed{color:var(--jade); background:var(--jade-soft);}
   .seal-stamp.even{color:var(--ink-soft); background:#EDEAE0;}
-  .seal-main{flex:1; min-width:0; display:flex; flex-direction:column; gap:12px;}
+  .seal-main{flex:1; min-width:0; display:flex; flex-direction:column; gap:12px; justify-content:center;}
+  .seal-main--simple{gap:0;}
   .seal-text .t1{font-size:12px; color:var(--ink-soft); letter-spacing:.05em;}
-  .seal-text .t2{font-family:'Noto Serif TC',serif; font-size:19px; font-weight:700; margin-top:2px;}
+  .seal-text .t2{font-family:'Noto Serif TC',serif; font-size:21px; font-weight:700; margin-top:4px;}
   .seal-text .t2 .val{font-family:'JetBrains Mono',monospace;}
-  .seal-stats{display:flex; gap:10px; flex-wrap:wrap; padding-top:10px; border-top:1px dashed var(--paper-line);}
-  .seal-stat{flex:1; min-width:110px;}
-  .seal-stat .ss-label{font-size:11px; color:var(--ink-soft); letter-spacing:.03em;}
-  .seal-stat .ss-val{font-size:14.5px; font-weight:700; margin-top:2px; color:var(--navy);}
   .settle-btn{
     align-self:flex-start; background:none; border:1px solid var(--paper-line); color:var(--ink-soft);
     padding:7px 12px; border-radius:8px; font-size:12px; cursor:pointer; white-space:nowrap;
@@ -253,13 +250,6 @@
   .tx-empty{padding:26px 0; text-align:center; color:var(--ink-soft); font-size:13px;}
 
   /* ---------- 本月收支明細 Modal ---------- */
-  .summary-totals{display:flex; gap:12px; margin-bottom:6px;}
-  .summary-total-item{
-    flex:1; background:var(--paper); border-radius:10px; padding:12px 14px;
-    display:flex; flex-direction:column; gap:4px;
-  }
-  .summary-total-item .st-label{font-size:11.5px; color:var(--ink-soft); letter-spacing:.03em;}
-  .summary-total-item .st-val{font-size:16px; font-weight:700; color:var(--navy);}
   .summary-group-title{
     font-family:'Noto Serif TC',serif; font-size:13px; font-weight:700; color:var(--navy);
     margin:18px 0 4px; display:flex; align-items:center; gap:6px;
@@ -646,9 +636,6 @@ function netDebtForMonth(y, m){
 function renderSeal(){
   const net = netDebtForMonth(viewYear, viewMonth);
   const row = document.getElementById('sealRow');
-  const list = monthTx();
-  const totalExpense = list.filter(t=>t.type==='expense').reduce((s,t)=>s+Number(t.amount),0);
-  const totalDebt = list.filter(t=>t.type==='debt').reduce((s,t)=>s+Number(t.amount),0);
 
   let stampClass='even', label=`${viewYear}年${viewMonth+1}月 目前互不相欠`, sub='本月帳務已結清';
   if(net > 0){ stampClass='owe'; label='本月 UGG 欠 INA'; sub = money(net); }
@@ -657,20 +644,10 @@ function renderSeal(){
   row.innerHTML = `
     <div class="seal-card" onclick="openSummaryModal()">
       <div class="seal-stamp ${stampClass}">${net===0 ? '結清' : '欠款'}</div>
-      <div class="seal-main">
+      <div class="seal-main seal-main--simple">
         <div class="seal-text">
           <div class="t1">本月淨債務餘額</div>
           <div class="t2">${label}${net!==0 ? ' <span class="val">'+sub+'</span>' : ''}</div>
-        </div>
-        <div class="seal-stats">
-          <div class="seal-stat">
-            <div class="ss-label">本月總代墊</div>
-            <div class="ss-val mono">${money(totalExpense)}</div>
-          </div>
-          <div class="seal-stat">
-            <div class="ss-label">本月總借款</div>
-            <div class="ss-val mono">${money(totalDebt)}</div>
-          </div>
         </div>
       </div>
       ${net!==0 ? '<button class="settle-btn" onclick="event.stopPropagation(); settleAll()">一鍵結清本月</button>' : ''}
@@ -864,24 +841,10 @@ function renderSummaryList(){
   const net = netDebtForMonth(summaryYear, summaryMonth);
   const expenses = list.filter(t=>t.type==='expense').slice().sort((a,b)=> a.date<b.date?1:-1);
   const debts = list.filter(t=>t.type==='debt').slice().sort((a,b)=> a.date<b.date?1:-1);
-  const totalExpense = expenses.reduce((s,t)=>s+Number(t.amount),0);
-  const totalDebt = debts.reduce((s,t)=>s+Number(t.amount),0);
 
-  let html = `
-    <div class="summary-totals">
-      <div class="summary-total-item">
-        <div class="st-label">本月代墊總計</div>
-        <div class="st-val mono">${money(totalExpense)}</div>
-      </div>
-      <div class="summary-total-item">
-        <div class="st-label">本月借款總計</div>
-        <div class="st-val mono">${money(totalDebt)}</div>
-      </div>
-    </div>`;
-
-  html += net===0
-    ? `<div class="hint" style="margin:0 0 6px;">本月未結清淨額：互不相欠</div>`
-    : `<div class="hint" style="margin:0 0 6px;">本月未結清淨額：${net>0?'UGG 欠 INA':'INA 欠 UGG'} ${money(Math.abs(net))}</div>`;
+  let html = net===0
+    ? `<div class="hint" style="margin:0 0 14px;">本月未結清淨額：互不相欠</div>`
+    : `<div class="hint" style="margin:0 0 14px;">本月未結清淨額：${net>0?'UGG 欠 INA':'INA 欠 UGG'} ${money(Math.abs(net))}</div>`;
 
   html += `<div class="summary-group-title">代墊明細</div>`;
 
