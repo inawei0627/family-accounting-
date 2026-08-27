@@ -72,6 +72,12 @@
     display:flex;align-items:center;justify-content:center; transition:.15s;
   }
   .month-nav button:hover{background:rgba(251,250,245,.22);}
+  .today-btn{
+    background:rgba(251,250,245,.1); border:1px solid rgba(251,250,245,.25); color:var(--white);
+    padding:0 12px; height:32px; border-radius:8px; cursor:pointer; font-size:12.5px; font-weight:600;
+    transition:.15s; white-space:nowrap;
+  }
+  .today-btn:hover{background:rgba(251,250,245,.22);}
   .month-nav .label{
     font-family:'Noto Serif TC',serif; font-size:15px; min-width:100px; width:auto; height:auto;
     padding:6px 10px; text-align:center;
@@ -144,7 +150,7 @@
   .cal-week{display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-size:12px; color:var(--ink-soft); padding-bottom:8px; border-bottom:1px solid var(--paper-line); margin-bottom:8px;}
   .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px;}
   .cal-cell{
-    min-height:76px; border-radius:10px; padding:7px 6px; cursor:pointer; position:relative;
+    min-height:90px; border-radius:10px; padding:7px 6px; cursor:pointer; position:relative;
     border:1px solid transparent; transition:.12s;
   }
   .cal-cell:hover{border-color:var(--gold-soft); background:#FBF8EF;}
@@ -154,6 +160,10 @@
   .cal-day-num{font-size:12.5px; font-weight:600; color:var(--ink-soft);}
   .cal-cell.today .cal-day-num{color:var(--jade);}
   .cal-day-sum{font-size:11px; margin-top:20px; text-align:right;}
+  .cal-day-amounts{margin-top:10px; text-align:right; line-height:1.5;}
+  .cal-amt{font-size:10px; font-weight:700; letter-spacing:.01em;}
+  .cal-amt.ina{color:var(--seal-red);}
+  .cal-amt.ugg{color:var(--jade);}
   .cal-dots{position:absolute; left:7px; bottom:8px; display:flex; gap:3px;}
   .dot{width:5px; height:5px; border-radius:50%;}
   .dot.expense{background:var(--navy);}
@@ -330,6 +340,7 @@
         <button onclick="changeMonth(-1)">‹</button>
         <button class="label" id="monthLabelBtn" onclick="togglePicker(event)"></button>
         <button onclick="changeMonth(1)">›</button>
+        <button class="today-btn" onclick="goToToday()">今天</button>
         <div class="month-picker" id="monthPicker">
           <select id="pickYear" onchange="jumpToPicker()"></select>
           <select id="pickMonth" onchange="jumpToPicker()"></select>
@@ -531,6 +542,59 @@
           <input type="text" id="settleNote" placeholder="例如：已用玉山銀行轉帳">
         </div>
         <button type="submit" class="form-submit">確認結清</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: 循環代墊 - 整組修改 -->
+<div class="overlay" id="recurringEditOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>編輯整組循環代墊</h3>
+      <button class="modal-close" onclick="closeModal('recurringEditOverlay')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="hint" style="text-align:left; margin:0 0 14px;">
+        這組循環代墊共有 <b id="recurCount">0</b> 筆紀錄。修改後會套用到「尚未結清」的紀錄；若要連同已結清的紀錄一起修改，請勾選下方選項。
+      </div>
+      <form id="recurringEditForm" onsubmit="saveRecurringEdit(event)">
+        <div class="two-col">
+          <div class="field">
+            <label>分類</label>
+            <select id="recurCategory">
+              <option value="飲食">🍜 飲食</option>
+              <option value="居家">🏠 居家</option>
+              <option value="交通">🚗 交通</option>
+              <option value="娛樂">🎬 娛樂</option>
+              <option value="醫療">💊 醫療</option>
+              <option value="現金">💵 現金</option>
+              <option value="其他">📎 其他</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>付款人</label>
+            <select id="recurPayer">
+              <option value="UGG">UGG</option>
+              <option value="INA">INA</option>
+            </select>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="field">
+            <label>金額 (NT$)</label>
+            <input type="number" id="recurAmount" min="0" step="1" required>
+          </div>
+          <div class="field">
+            <label>備註</label>
+            <input type="text" id="recurNote" placeholder="例如：代墊房租">
+          </div>
+        </div>
+        <label class="recurring-toggle">
+          <input type="checkbox" id="recurIncludeSettled">
+          <span>連同已結清的紀錄一併修改</span>
+        </label>
+        <button type="submit" class="form-submit">套用到整組循環代墊</button>
       </form>
     </div>
   </div>
@@ -784,6 +848,15 @@ function recurringTagHtml(t){
   return t.recurring_group ? '<span class="recurring-tag">🔁 循環代墊</span>' : '';
 }
 
+/* 循環代墊：整組「編輯」與「刪除」按鈕（顯示在每一筆循環紀錄的操作列） */
+function recurringActionsHtml(t){
+  if(!t.recurring_group) return '';
+  const gid = t.recurring_group;
+  return `
+    <button title="編輯整組循環代墊" onclick="event.stopPropagation(); openRecurringEditModal('${gid}')">🔁✎</button>
+    <button title="刪除整組循環代墊" onclick="event.stopPropagation(); deleteRecurringGroup('${gid}')">🔁🗑</button>`;
+}
+
 function openSummaryModal(){
   summaryYear = viewYear; summaryMonth = viewMonth;
   renderSummaryList();
@@ -865,6 +938,7 @@ function renderSummaryList(){
         <div class="tx-amt mono">${money(t.amount)}</div>
         <div class="tx-actions">
           ${undoBtnHtml(t)}
+          ${recurringActionsHtml(t)}
           <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
           <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
         </div>
@@ -938,7 +1012,8 @@ function renderCalendar(){
   for(let day=1; day<=daysInMonth; day++){
     const dateStr = `${viewYear}-${pad(viewMonth+1)}-${pad(day)}`;
     const dayTx = transactions.filter(t=>t.date===dateStr);
-    const expenseSum = dayTx.filter(t=>t.type==='expense').reduce((s,t)=>s+Number(t.amount),0);
+    const inaSum = dayTx.filter(t=>t.type==='expense' && t.payer==='INA').reduce((s,t)=>s+Number(t.amount),0);
+    const uggSum = dayTx.filter(t=>t.type==='expense' && t.payer==='UGG').reduce((s,t)=>s+Number(t.amount),0);
     const hasDebt = dayTx.some(t=>t.type==='debt');
     const hasExpense = dayTx.some(t=>t.type==='expense');
     const isToday = dateStr === todayStr();
@@ -946,7 +1021,10 @@ function renderCalendar(){
     html += `
       <div class="cal-cell ${isToday?'today':''}" onclick="openDayModal('${dateStr}')">
         <div class="cal-day-num">${day}</div>
-        ${expenseSum>0 ? `<div class="cal-day-sum mono">${expenseSum.toLocaleString()}</div>` : ''}
+        ${(inaSum>0||uggSum>0) ? `<div class="cal-day-amounts mono">
+          ${inaSum>0 ? `<div class="cal-amt ina">INA ${inaSum.toLocaleString()}</div>` : ''}
+          ${uggSum>0 ? `<div class="cal-amt ugg">UGG ${uggSum.toLocaleString()}</div>` : ''}
+        </div>` : ''}
         ${(hasDebt||hasExpense) ? `<div class="cal-dots">${hasExpense?'<span class="dot expense"></span>':''}${hasDebt?'<span class="dot debt"></span>':''}</div>` : ''}
       </div>`;
   }
@@ -957,6 +1035,13 @@ function changeMonth(delta){
   viewMonth += delta;
   if(viewMonth<0){viewMonth=11; viewYear--;}
   if(viewMonth>11){viewMonth=0; viewYear++;}
+  renderAll();
+}
+
+/* 返回「今天」所在的月份 */
+function goToToday(){
+  viewYear = Y; viewMonth = M;
+  document.getElementById('monthPicker').classList.remove('open');
   renderAll();
 }
 
@@ -1028,6 +1113,7 @@ function renderDayList(){
         <div class="tx-amt mono">${money(t.amount)}</div>
         <div class="tx-actions">
           ${undoBtnHtml(t)}
+          ${recurringActionsHtml(t)}
           <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
           <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
         </div>
@@ -1062,6 +1148,83 @@ async function deleteTx(id){
   }
   transactions = transactions.filter(t=>t.id!==id);
   lastSettledIds = lastSettledIds.filter(x=>x!==id);
+  if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
+  if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
+  renderAll();
+}
+
+/* ================= 循環代墊：整組刪除／整組修改 ================= */
+
+/* 一次刪除同一組循環代墊的所有紀錄 */
+async function deleteRecurringGroup(groupId){
+  const items = transactions.filter(t=>t.recurring_group===groupId);
+  if(items.length===0) return;
+  if(!confirm(`確定要刪除整組循環代墊嗎？\n共 ${items.length} 筆紀錄（含已結清）將一併刪除，此動作無法復原。`)) return;
+
+  const { error } = await sb.from(TABLE).delete().eq('recurring_group', groupId);
+  if(error){
+    console.error(error);
+    alert('刪除失敗：' + error.message);
+    return;
+  }
+  const ids = items.map(t=>t.id);
+  transactions = transactions.filter(t=>t.recurring_group!==groupId);
+  lastSettledIds = lastSettledIds.filter(id=>!ids.includes(id));
+
+  if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
+  if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
+  renderAll();
+}
+
+/* 打開「整組修改」表單，帶入該組目前的內容作為預設值 */
+let pendingRecurringGroup = null;
+function openRecurringEditModal(groupId){
+  const items = transactions.filter(t=>t.recurring_group===groupId);
+  if(items.length===0) return;
+  pendingRecurringGroup = groupId;
+  const sample = items[0];
+
+  document.getElementById('recurCount').textContent = items.length;
+  document.getElementById('recurCategory').value = sample.category;
+  document.getElementById('recurPayer').value = sample.payer;
+  document.getElementById('recurAmount').value = sample.amount;
+  document.getElementById('recurNote').value = sample.note || '';
+  document.getElementById('recurIncludeSettled').checked = false;
+  document.getElementById('recurringEditOverlay').classList.add('open');
+}
+
+/* 將修改套用到整組循環代墊（預設只套用到尚未結清的紀錄，可勾選一併套用到已結清紀錄） */
+async function saveRecurringEdit(e){
+  e.preventDefault();
+  if(!pendingRecurringGroup) return;
+
+  const category = document.getElementById('recurCategory').value;
+  const payer = document.getElementById('recurPayer').value;
+  const amount = Number(document.getElementById('recurAmount').value);
+  const note = document.getElementById('recurNote').value;
+  const includeSettled = document.getElementById('recurIncludeSettled').checked;
+
+  let items = transactions.filter(t=>t.recurring_group===pendingRecurringGroup);
+  if(!includeSettled) items = items.filter(t=>t.status!=='settled');
+  if(items.length===0){
+    alert('目前沒有符合條件（尚未結清）的紀錄可以修改，若要一併修改已結清的紀錄，請勾選下方選項。');
+    return;
+  }
+
+  const ids = items.map(t=>t.id);
+  const payload = { category, payer, amount, note };
+  const { error } = await sb.from(TABLE).update(payload).in('id', ids);
+  if(error){
+    console.error(error);
+    alert('修改失敗：' + error.message);
+    return;
+  }
+  transactions.forEach(t=>{
+    if(ids.includes(t.id)){ t.category=category; t.payer=payer; t.amount=amount; t.note=note; }
+  });
+
+  closeModal('recurringEditOverlay');
+  pendingRecurringGroup = null;
   if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
   if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
   renderAll();
