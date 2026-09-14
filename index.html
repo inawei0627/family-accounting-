@@ -1416,4 +1416,19 @@ async function saveTransaction(e){
     renderSummaryList();
   } else {
     openDayModal(date);
-  
+  }
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+}
+
+// 點擊遮罩空白處關閉
+document.querySelectorAll('.overlay').forEach(ov=>{
+  ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('open'); });
+});
+
+loadTransactions();
+</script>
+</body>
+</html>
