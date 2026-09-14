@@ -3,1429 +3,1735 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>INA & UGG 家帳收支存摺</title>
-
-<!-- 網頁縮圖 / favicon -->
-<link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/inawei0627/family-accounting-@main/pig_1960025.png">
-<link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/inawei0627/family-accounting-@main/pig_1960025.png">
-
-<!-- 分享連結時顯示的縮圖（LINE / FB / IG 等） -->
-<meta property="og:title" content="INA & UGG 家帳收支存摺">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/inawei0627/family-accounting-@main/pig_1960025.png">
-<meta property="og:type" content="website">
-
+<title>INA-working schedule💣</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/ina-glitch/workschedule/main/favicon.png">
+<link rel="shortcut icon" type="image/png" href="https://raw.githubusercontent.com/ina-glitch/workschedule/main/favicon.png">
+<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/ina-glitch/workschedule/main/favicon.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ina-glitch/workschedule/main/favicon.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/ina-glitch/workschedule/main/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#EFEBDD;
-    --paper-line:#DCD5BE;
-    --navy:#1F3350;
-    --navy-deep:#152438;
-    --gold:#B08D4F;
-    --gold-soft:#D8C79A;
-    --seal-red:#A63D33;
-    --seal-red-soft:#E7D3CE;
-    --jade:#3B6E5E;
-    --jade-soft:#D6E3DD;
-    --ink:#26241F;
-    --ink-soft:#635C4C;
-    --white:#FBFAF5;
-    --radius:14px;
-    --shadow:0 6px 20px rgba(31,51,80,.12);
+    --ink:#1C2333;
+    --ink-soft:#4A5164;
+    --paper:#F5F6F4;
+    --card:#FFFFFF;
+    --muted:#8A93A6;
+    --line:#E3E5E0;
+    --teal:#2F6F5E;
+    --teal-deep:#204F42;
+    --amber:#E2A63B;
+    --amber-bg:#FCF2DE;
+    --red:#C6413A;
+    --red-bg:#FBE7E5;
+    --low-bg:#EDF1EF;
+    --weekend-bg:#ECEDEC;
+    --note-bg:#ECEDF1;
+    --note-text:#5B6472;
+    --note-line:#C7CCD6;
+    --hold-bg:#E7E9F2;
+    --hold-text:#565F82;
+    --hold-line:#C9CEE0;
+    --radius:10px;
+    --shadow:0 1px 2px rgba(28,35,51,0.04), 0 4px 14px rgba(28,35,51,0.05);
   }
+
   *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
   body{
-    margin:0;
     background:var(--paper);
-    background-image:
-      repeating-linear-gradient(180deg, rgba(176,141,79,.05) 0px, rgba(176,141,79,.05) 1px, transparent 1px, transparent 34px);
     color:var(--ink);
-    font-family:'Noto Sans TC', sans-serif;
-    -webkit-font-smoothing:antialiased;
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    line-height:1.5;
+    min-height:100vh;
   }
-  .mono{font-family:'JetBrains Mono', monospace;}
-  .wrap{max-width:920px;margin:0 auto;padding:28px 20px 80px;}
 
-  /* ---------- Hero : 存摺封面 ---------- */
-  .cover{
-    background:linear-gradient(155deg, var(--navy) 0%, var(--navy-deep) 100%);
-    border-radius:18px;
-    padding:30px 32px 26px;
-    color:var(--white);
-    position:relative;
+  .topbar{
+    border-bottom:1px solid var(--line);
+    background:var(--card);
+    padding:22px 28px;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+    position:sticky;
+    top:0;
+    z-index:20;
+  }
+  .brand{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:-0.01em;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  .brand .mark{
+    display:inline-block;
+    width:10px;height:10px;
+    background:var(--teal);
+    border-radius:2px;
+    transform:rotate(45deg);
+  }
+  .brand .sub{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    font-weight:400;
+    color:var(--muted);
+    letter-spacing:0.02em;
+  }
+  .stat-strip{
+    display:flex;
+    gap:22px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .stat-strip b{
+    font-size:16px;
+    font-family:'Space Grotesk',sans-serif;
+    color:var(--ink);
+    display:block;
+    line-height:1.1;
+  }
+  .stat-strip .stat{ min-width:52px; }
+  .stat-strip .stat.warn b{ color:var(--red); }
+
+  .layout{
+    display:grid;
+    grid-template-columns:320px 1fr 300px;
+    gap:0;
+    align-items:start;
+    max-width:1620px;
+    margin:0 auto;
+  }
+
+  /* ---- work summary sidebar ---- */
+  .summary-sidebar{
+    border-right:1px solid var(--line);
+    padding:28px 20px;
+    position:sticky;
+    top:73px;
+    height:calc(100vh - 73px);
+    overflow-y:auto;
+  }
+
+  /* ---- right sidebar (this week meetings / trips) ---- */
+  .summary-sidebar-right{
+    border-left:1px solid var(--line);
+    padding:28px 20px;
+    position:sticky;
+    top:73px;
+    height:calc(100vh - 73px);
+    overflow-y:auto;
+  }
+
+  /* ---- form panel (now rendered inside a modal) ---- */
+  .panel{
+    padding:2px 2px 4px;
+  }
+  .modal-box.task-modal-box{ max-width:460px; }
+  .task-modal-box .modal-head{ align-items:flex-start; }
+  .panel h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:15px;
+    font-weight:600;
+    margin:0 0 4px;
+  }
+  .panel .hint{
+    font-size:12.5px;
+    color:var(--muted);
+    margin:0 0 22px;
+  }
+  .field{ margin-bottom:18px; }
+  .field label{
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+    letter-spacing:0.01em;
+  }
+  .field textarea,
+  .field input,
+  .field select{
+    width:100%;
+    border:1px solid var(--line);
+    background:var(--card);
+    border-radius:7px;
+    padding:9px 11px;
+    font-family:'Inter',sans-serif;
+    font-size:13.5px;
+    color:var(--ink);
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .field input[type="date"]{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+  }
+  .field input[type="date"]:disabled{
+    background:var(--paper);
+    color:var(--muted);
+  }
+  .field textarea{
+    resize:vertical;
+    min-height:64px;
+    font-family:'Inter',sans-serif;
+  }
+  .field textarea:focus,
+  .field input:focus,
+  .field select:focus{
+    outline:none;
+    border-color:var(--teal);
+    box-shadow:0 0 0 3px rgba(47,111,94,0.12);
+  }
+  .field .row{ display:flex; gap:8px; align-items:center; }
+  .field .row input[type="date"]{ flex:1; }
+  .field .row button{
+    flex:none;
+    font-size:11px;
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--teal-deep);
+    background:var(--low-bg);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:8px 10px;
+    cursor:pointer;
+  }
+  .field .row button:hover{ background:#dfe9e5; }
+
+  .unlimited-toggle{
+    flex:none;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    font-size:12px;
+    font-weight:500;
+    color:var(--ink-soft);
+    white-space:nowrap;
+    cursor:pointer;
+  }
+  .unlimited-toggle input[type="checkbox"]{
+    width:auto;
+    accent-color:var(--teal);
+    cursor:pointer;
+  }
+
+  .urgency-picker{ display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+  .urgency-picker input{ display:none; }
+  .urgency-picker label{
+    text-align:center;
+    padding:8px 2px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    font-size:11.5px;
+    font-weight:600;
+    cursor:pointer;
+    color:var(--ink-soft);
+    background:var(--card);
+    transition:all .15s ease;
+  }
+  .urgency-picker input:checked + label.u-top{ background:var(--red-bg); border-color:var(--red); color:var(--red); }
+  .urgency-picker input:checked + label.u-high{ background:var(--amber-bg); border-color:var(--amber); color:#8a6415; }
+  .urgency-picker input:checked + label.u-normal{ background:var(--low-bg); border-color:var(--teal); color:var(--teal-deep); }
+  .urgency-picker input:checked + label.u-note{ background:var(--note-bg); border-color:var(--note-line); color:var(--note-text); }
+
+  .submit-btn{
+    width:100%;
+    background:var(--ink);
+    color:#fff;
+    border:none;
+    border-radius:7px;
+    padding:12px 0;
+    font-size:13.5px;
+    font-weight:600;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+    margin-top:6px;
+    transition:background .15s ease;
+  }
+  .submit-btn:hover{ background:var(--teal-deep); }
+  .cancel-edit-btn{
+    width:100%;
+    background:var(--card);
+    color:var(--ink-soft);
+    border:1px solid var(--line);
+    border-radius:7px;
+    padding:10px 0;
+    font-size:12.5px;
+    font-weight:600;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+    margin-top:8px;
+    transition:background .15s ease;
+  }
+  .cancel-edit-btn:hover{ background:var(--low-bg); }
+  .panel.editing{ box-shadow:inset 3px 0 0 var(--teal); }
+
+  /* ---- main list ---- */
+  .main{ padding:28px 28px 60px; }
+  .list-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+    margin-bottom:18px;
+  }
+  .list-head h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:18px;
+    margin:0;
+  }
+  .controls-top{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+
+  /* ---- grouped secondary filters ---- */
+  .filter-bar{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    flex-wrap:wrap;
+    padding:12px 14px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:9px;
+    margin-bottom:8px;
+  }
+  .filter-group{ display:flex; align-items:center; gap:8px; }
+  .filter-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    font-weight:600;
+    color:var(--muted);
+    white-space:nowrap;
+  }
+  .filter-reset{
+    margin-left:auto;
+    border:1px solid transparent;
+    background:transparent;
+    color:var(--red);
+    font-size:12px;
+    font-weight:600;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+    padding:5px 8px;
+    border-radius:6px;
+  }
+  .filter-reset:hover{ background:var(--red-bg); }
+  .filter-summary{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    color:var(--muted);
+    margin:0 0 16px 2px;
+  }
+  .filter-summary b{ color:var(--ink-soft); }
+
+  /* ---- list view ---- */
+  .list-view-toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .list-view-count{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  .add-task-btn{
+    border:none;
+    background:var(--ink);
+    color:#fff;
+    border-radius:7px;
+    padding:0 16px;
+    height:32px;
+    font-size:12.5px;
+    font-weight:600;
+    font-family:'Inter',sans-serif;
+    cursor:pointer;
+    transition:background .15s ease;
+  }
+  .add-task-btn:hover{ background:var(--teal-deep); }
+  .add-task-btn.loan-btn{ background:#1B6E8C; }
+  .add-task-btn.loan-btn:hover{ background:#144F65; }
+
+  .seg{
+    display:flex;
+    border:1px solid var(--line);
+    border-radius:7px;
     overflow:hidden;
+    background:var(--card);
+  }
+  .seg button{
+    border:none;
+    background:transparent;
+    padding:7px 12px;
+    font-size:12px;
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--ink-soft);
+    cursor:pointer;
+    border-right:1px solid var(--line);
+    white-space:nowrap;
+  }
+  .seg button:last-child{ border-right:none; }
+  .seg button.active{ background:var(--ink); color:#fff; }
+
+  .source-select{
+    border:1px solid var(--line);
+    border-radius:7px;
+    background:var(--card);
+    padding:0 10px;
+    font-size:12px;
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--ink-soft);
+    cursor:pointer;
+    height:32px;
+  }
+  .source-select:focus{ outline:none; border-color:var(--teal); }
+
+  .search-input{
+    border:1px solid var(--line);
+    border-radius:7px;
+    background:var(--card);
+    padding:0 10px;
+    font-size:12px;
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--ink);
+    height:32px;
+    width:220px;
+    max-width:100%;
+  }
+  .search-input:focus{ outline:none; border-color:var(--teal); }
+  .search-input::placeholder{ color:var(--muted); }
+
+  /* ---- work summary ---- */
+  .summary-section{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    margin-bottom:22px;
+  }
+  .summary-col{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
     box-shadow:var(--shadow);
+    padding:16px 18px;
   }
-  .cover::before{
-    content:"";
-    position:absolute; inset:0;
-    background:
-      radial-gradient(circle at 88% -10%, rgba(216,199,154,.18), transparent 45%),
-      repeating-linear-gradient(90deg, rgba(255,255,255,.03) 0 2px, transparent 2px 40px);
-    pointer-events:none;
+  .summary-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:12px;
   }
-  .cover-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;}
-  .cover-eyebrow{
-    font-size:11px; letter-spacing:.28em; color:var(--gold-soft); text-transform:uppercase;
-    border:1px solid rgba(216,199,154,.4); padding:4px 10px; border-radius:999px; display:inline-block;
+  .summary-head h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:14.5px;
+    margin:0;
   }
-  .cover-title{
-    font-family:'Noto Serif TC', serif; font-weight:900; font-size:26px; margin:14px 0 2px;
-    letter-spacing:.04em;
+  .summary-range{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    color:var(--muted);
   }
-  .cover-sub{color:rgba(251,250,245,.6); font-size:13px;}
-  .month-nav{display:flex; align-items:center; gap:10px; position:relative;}
-  .month-nav button{
-    background:rgba(251,250,245,.1); border:1px solid rgba(251,250,245,.25); color:var(--white);
-    width:32px; height:32px; border-radius:8px; cursor:pointer; font-size:15px;
-    display:flex;align-items:center;justify-content:center; transition:.15s;
+  .summary-list{ display:flex; flex-direction:column; gap:8px; }
+  .summary-empty{
+    color:var(--muted);
+    font-size:12.5px;
+    text-align:center;
+    padding:18px 0;
   }
-  .month-nav button:hover{background:rgba(251,250,245,.22);}
+  .summary-item{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:5px 8px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:9px 10px;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .summary-item:hover{ border-color:var(--teal); background:var(--low-bg); }
+  .summary-item .dot{
+    flex-shrink:0;
+    width:8px; height:8px;
+    border-radius:50%;
+  }
+  .summary-item .dot.dot-top{ background:var(--red); }
+  .summary-item .dot.dot-high{ background:var(--amber); }
+  .summary-item .dot.dot-normal{ background:var(--teal); }
+  .summary-item .dot.dot-note{ background:var(--muted); }
+  .summary-item .si-title{
+    flex:1 1 100%;
+    min-width:0;
+    font-size:13px;
+    font-weight:600;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    margin-left:2px;
+  }
+  .summary-item .si-meta{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:5px;
+    flex:1 1 auto;
+    min-width:0;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    color:var(--muted);
+  }
+  .summary-item .si-date{ white-space:nowrap; }
+  .summary-item .si-deadline{ white-space:nowrap; }
+  .summary-item .si-actions{ display:flex; gap:4px; flex-shrink:0; margin-left:auto; }
+  .summary-item .si-actions button{
+    border:1px solid var(--line);
+    background:var(--card);
+    border-radius:6px;
+    padding:4px 8px;
+    font-size:10.5px;
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+    cursor:pointer;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .summary-item .si-actions .done-btn:hover{ background:var(--low-bg); border-color:var(--teal); color:var(--teal-deep); }
+  .summary-item .si-actions .hold-btn:hover{ background:var(--hold-bg); border-color:var(--hold-line); color:var(--hold-text); }
+  .summary-item .si-actions .edit-btn:hover{ background:#EEF0FB; border-color:#4A4FB0; color:#4A4FB0; }
+  .summary-item.is-hold{ border-color:var(--hold-line); background:var(--hold-bg); }
+
+
+  .overdue-group{ margin-bottom:14px; }
+  .overdue-group:last-child{ margin-bottom:0; }
+  .og-head{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+    padding-bottom:6px;
+    border-bottom:1px dashed var(--line);
+  }
+  .og-head .og-count{
+    background:var(--red-bg);
+    color:var(--red);
+    font-weight:700;
+    border-radius:20px;
+    padding:1px 8px;
+    font-size:10.5px;
+  }
+  .og-list{ display:flex; flex-direction:column; gap:8px; }
+
+  .empty{
+    border:1px dashed var(--line);
+    border-radius:var(--radius);
+    padding:60px 20px;
+    text-align:center;
+    color:var(--muted);
+    font-size:13.5px;
+  }
+  .empty .big{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:16px;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+
+  .cards{ display:flex; flex-direction:column; gap:10px; }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:16px 18px;
+    display:grid;
+    grid-template-columns:5px 1fr auto;
+    gap:16px;
+    align-items:start;
+    position:relative;
+  }
+  .card .stripe{
+    align-self:stretch;
+    border-radius:4px;
+    background:var(--low-bg);
+  }
+  .card.u-top .stripe{ background:var(--red); }
+  .card.u-high .stripe{ background:var(--amber); }
+  .card.u-normal .stripe{ background:var(--teal); }
+  .card.u-note .stripe{ background:var(--note-line); }
+
+  .card.done{ opacity:0.55; }
+  .card.done .title{ text-decoration:line-through; color:var(--muted); }
+  .card.hold{ background:var(--hold-bg); }
+  .card.hold .stripe{ background:var(--hold-text); }
+
+  /* completed items in list view: playful instead of dimmed */
+  .card.done-playful{ opacity:1; background:var(--card); }
+  .card.done-playful .stripe{ background:linear-gradient(180deg, var(--teal), #7FB8A6); }
+  .card.done-playful .title{ text-decoration:none; color:var(--ink); }
+  .done-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    background:#F5E6EB;
+    color:#A6607A;
+    border-radius:20px;
+    padding:2px 10px;
+    font-size:11.5px;
+    font-weight:700;
+    font-family:'IBM Plex Mono',monospace;
+    margin-right:8px;
+    vertical-align:middle;
+    animation:done-pop .35s ease;
+  }
+  @keyframes done-pop{
+    0%{ transform:scale(0.7); opacity:0; }
+    60%{ transform:scale(1.08); opacity:1; }
+    100%{ transform:scale(1); }
+  }
+
+  .card .body{ min-width:0; }
+  .title{
+    font-size:14.5px;
+    font-weight:600;
+    margin:0 0 6px;
+    word-break:break-word;
+  }
+  .meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 14px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    color:var(--muted);
+    align-items:center;
+  }
+  .meta .tag{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    padding:2px 8px;
+    border-radius:20px;
+    font-weight:600;
+    border:1px solid var(--line);
+  }
+  .tag.u-top{ background:var(--red-bg); color:var(--red); border-color:transparent; }
+  .tag.u-high{ background:var(--amber-bg); color:#8a6415; border-color:transparent; }
+  .tag.u-normal{ background:var(--low-bg); color:var(--teal-deep); border-color:transparent; }
+  .tag.u-note{ background:var(--note-bg); color:var(--note-text); border-color:transparent; }
+  .meta .source{
+    padding:2px 8px;
+    border-radius:20px;
+    background:#EEF0FB;
+    color:#4A4FB0;
+    font-weight:600;
+  }
+  .meta .category{
+    padding:2px 8px;
+    border-radius:20px;
+    background:#FDEDF3;
+    color:#B0397A;
+    font-weight:600;
+  }
+  .meta .complete-note{
+    flex-basis:100%;
+    display:block;
+    color:var(--ink-soft);
+    font-family:'Inter',sans-serif;
+    font-size:12px;
+    background:var(--low-bg);
+    border-radius:8px;
+    padding:6px 10px;
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+
+  .badge{
+    padding:2px 9px;
+    border-radius:20px;
+    font-weight:600;
+    letter-spacing:0.01em;
+  }
+  .badge.overdue{ background:var(--red); color:#fff; }
+  .badge.soon{ background:var(--amber); color:#4a3510; }
+  .badge.ok{ background:var(--low-bg); color:var(--ink-soft); }
+  .badge.unlimited{ background:var(--note-bg); color:var(--note-text); }
+  .badge.hold{ background:var(--hold-bg); color:var(--hold-text); }
+
+  .actions{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    align-self:center;
+  }
+  .actions button{
+    border:1px solid var(--line);
+    background:var(--card);
+    border-radius:6px;
+    padding:6px 12px;
+    font-size:11.5px;
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+    cursor:pointer;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .actions .done-btn:hover{ background:var(--low-bg); border-color:var(--teal); color:var(--teal-deep); }
+  .actions .hold-btn:hover{ background:var(--hold-bg); border-color:var(--hold-line); color:var(--hold-text); }
+  .actions .hold-btn.active{ background:var(--hold-bg); border-color:var(--hold-line); color:var(--hold-text); }
+  .actions .edit-btn:hover{ background:#EEF0FB; border-color:#4A4FB0; color:#4A4FB0; }
+  .actions .del-btn:hover{ background:var(--red-bg); border-color:var(--red); color:var(--red); }
+
+  /* ---- calendar ---- */
+
+  /* compact legend blended directly into a field, instead of a standalone card */
+  .field-legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px 12px;
+    margin-top:8px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    color:var(--muted);
+  }
+  .field-legend .legend-item{ display:inline-flex; align-items:center; gap:4px; }
+  .field-legend .swatch{ width:10px; height:10px; border-radius:3px; display:inline-block; }
+  .field-legend .dot{ width:7px; height:7px; border-radius:50%; display:inline-block; }
+  .field-legend .swatch.cat-leave{ background:#E4EEFC; }
+  .field-legend .swatch.cat-meeting{ background:#F1E9FB; }
+  .field-legend .swatch.cat-trip{ background:var(--amber-bg); }
+  .field-legend .swatch.cat-legal{ background:#FDEDF3; }
+  .field-legend .swatch.cat-none{ background:var(--low-bg); }
+  .field-legend .dot.dot-top{ background:var(--red); }
+  .field-legend .dot.dot-high{ background:var(--amber); }
+  .field-legend .dot.dot-normal{ background:var(--teal); }
+  .field-legend .dot.dot-note{ background:var(--muted); }
+
+
+  .unscheduled-bar{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:8px;
+    width:100%;
+  }
+  .unscheduled-bar .chip{
+    cursor:pointer;
+    font-size:13px;
+    padding:6px 12px;
+    border-radius:7px;
+    width:100%;
+    box-sizing:border-box;
+  }
+
+  .cal-nav{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:16px;
+  }
+  .cal-nav .label{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:15px;
+    font-weight:600;
+    min-width:150px;
+  }
+  .cal-select{
+    border:1px solid var(--line);
+    background:var(--card);
+    border-radius:6px;
+    height:30px;
+    padding:0 8px;
+    font-family:'Space Grotesk',sans-serif;
+    font-size:14px;
+    font-weight:600;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .cal-select:hover{ background:var(--low-bg); }
+  .cal-select:focus{ outline:none; border-color:var(--teal); }
+  .nav-btn{
+    border:1px solid var(--line);
+    background:var(--card);
+    border-radius:6px;
+    width:30px; height:30px;
+    font-size:13px;
+    cursor:pointer;
+    color:var(--ink-soft);
+  }
+  .nav-btn:hover{ background:var(--low-bg); }
   .today-btn{
-    background:rgba(251,250,245,.1); border:1px solid rgba(251,250,245,.25); color:var(--white);
-    padding:0 12px; height:32px; border-radius:8px; cursor:pointer; font-size:12.5px; font-weight:600;
-    transition:.15s; white-space:nowrap;
-  }
-  .today-btn:hover{background:rgba(251,250,245,.22);}
-  .month-nav .label{
-    font-family:'Noto Serif TC',serif; font-size:15px; min-width:100px; width:auto; height:auto;
-    padding:6px 10px; text-align:center;
-  }
-  .month-picker{
-    display:none; gap:8px; position:absolute; top:42px; right:0; z-index:6;
-    background:var(--white); border-radius:10px; padding:10px; box-shadow:var(--shadow);
-  }
-  .month-picker.open{display:flex;}
-  .month-picker select{
-    padding:7px 9px; border-radius:7px; border:1px solid var(--paper-line); background:var(--paper);
-    font-size:13px; color:var(--ink); font-family:'Noto Sans TC', sans-serif;
+    width:auto;
+    padding:0 12px;
+    font-size:12px;
+    font-family:'IBM Plex Mono',monospace;
+    margin-left:auto;
   }
 
-  .cover-figure{
-    margin-top:22px; padding-top:18px; border-top:1px dashed rgba(216,199,154,.35);
-    display:flex; align-items:flex-end; justify-content:flex-end; flex-wrap:wrap; gap:14px;
+  .cal-weekdays{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:6px;
+    margin-bottom:6px;
   }
-  .cover-figure .amount{
-    font-size:38px; font-weight:700; letter-spacing:.02em;
+  .cal-weekdays span{
+    text-align:center;
+    font-size:11px;
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--muted);
+    padding-bottom:4px;
   }
-  .cover-figure .amount-label{font-size:12px; color:var(--gold-soft); letter-spacing:.1em;}
-  .add-btn{
-    background:var(--gold); color:var(--navy-deep); border:none; border-radius:10px;
-    padding:11px 18px; font-weight:700; font-size:14px; cursor:pointer;
-    box-shadow:0 4px 12px rgba(176,141,79,.4); transition:.15s;
+  .cal-weekdays span.sun{ color:var(--muted); }
+  .cal-weekdays span.sat{ color:var(--muted); }
+  .cal-grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    grid-auto-rows:118px;
+    gap:6px;
   }
-  .add-btn:hover{transform:translateY(-1px); box-shadow:0 6px 16px rgba(176,141,79,.5);}
+  .cal-day{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:7px;
+    height:118px;
+    overflow-y:auto;
+    overflow-x:hidden;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    min-width:0;
+  }
+  .cal-day.has-tasks{ cursor:pointer; }
+  .cal-day.has-tasks:hover{ border-color:var(--teal); }
+  .cal-day.other-month{ opacity:0.38; }
+  .cal-day.sun{ background:var(--weekend-bg); }
+  .cal-day.sat{ background:var(--weekend-bg); }
+  .cal-day.today{ border-color:var(--teal); box-shadow:0 0 0 1px var(--teal) inset; }
+  .cal-day .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    font-weight:600;
+    color:var(--ink-soft);
+  }
+  .cal-day.today .num{ color:var(--teal-deep); }
 
-  /* ---------- 印章 / 債務區 ---------- */
-  .seal-row{display:flex; gap:16px; margin-top:20px; flex-wrap:wrap;}
-  .seal-card{
-    flex:1; min-width:260px;
-    background:var(--white); border-radius:var(--radius); padding:20px 22px;
-    box-shadow:var(--shadow); display:flex; align-items:center; gap:18px;
-    cursor:pointer; transition:.15s; border:1px solid transparent;
+  .chip{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-size:10.5px;
+    padding:2px 6px;
+    border-radius:5px;
+    max-width:100%;
+    flex-shrink:0;
+    font-family:'IBM Plex Mono',monospace;
+    cursor:pointer;
   }
-  .seal-card:hover{box-shadow:0 10px 26px rgba(31,51,80,.16); border-color:var(--gold-soft);}
-  .seal-stamp{
-    width:64px; height:64px; border-radius:50%; flex:0 0 auto;
+  .chip .dot{
+    flex-shrink:0;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    display:inline-block;
+  }
+  .chip .dot.dot-top{ background:var(--red); }
+  .chip .dot.dot-high{ background:var(--amber); }
+  .chip .dot.dot-normal{ background:var(--teal); }
+  .chip .dot.dot-note{ background:var(--muted); }
+  .chip .label-text{
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  /* chip background/color now reflects work category, not urgency */
+  .chip.cat-leave{ background:#E4EEFC; color:#2A5FA8; }
+  .chip.cat-meeting{ background:#F1E9FB; color:#6B3FA0; }
+  .chip.cat-trip{ background:var(--amber-bg); color:#8a6415; }
+  .chip.cat-legal{ background:#FDEDF3; color:#B0397A; }
+  .chip.cat-none{ background:var(--low-bg); color:var(--teal-deep); }
+  .chip.cat-loan{ background:#DCEEF5; color:#1B6E8C; }
+  .chip.done{ text-decoration:line-through; opacity:0.55; }
+  .chip.chip-deadline{ font-weight:700; box-shadow:0 0 0 1px var(--red) inset; }
+  .chip.chip-completed{ font-weight:700; box-shadow:0 0 0 1px var(--teal) inset; }
+  .more-link{
+    font-size:10px;
+    color:var(--muted);
+    cursor:pointer;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .more-link:hover{ color:var(--teal-deep); }
+
+  /* ---- modal ---- */
+  .modal-overlay{
+    position:fixed; inset:0;
+    background:rgba(28,35,51,0.45);
     display:flex; align-items:center; justify-content:center;
-    font-family:'Noto Serif TC',serif; font-weight:900; font-size:13px; text-align:center; line-height:1.15;
-    border:2.5px solid currentColor; position:relative; letter-spacing:.02em;
+    padding:20px;
+    z-index:100;
   }
-  .seal-stamp::after{
-    content:""; position:absolute; inset:5px; border:1px solid currentColor; border-radius:50%; opacity:.5;
-  }
-  .seal-stamp.owe{color:var(--seal-red); background:var(--seal-red-soft);}
-  .seal-stamp.owed{color:var(--jade); background:var(--jade-soft);}
-  .seal-stamp.even{color:var(--ink-soft); background:#EDEAE0;}
-  .seal-main{flex:1; min-width:0; display:flex; flex-direction:column; gap:12px; justify-content:center;}
-  .seal-main--simple{gap:0;}
-  .seal-text .t1{font-size:12px; color:var(--ink-soft); letter-spacing:.05em;}
-  .seal-text .t2{font-family:'Noto Serif TC',serif; font-size:21px; font-weight:700; margin-top:4px;}
-  .seal-text .t2 .val{font-family:'JetBrains Mono',monospace;}
-  .settle-btn{
-    align-self:flex-start; background:none; border:1px solid var(--paper-line); color:var(--ink-soft);
-    padding:7px 12px; border-radius:8px; font-size:12px; cursor:pointer; white-space:nowrap;
-  }
-  .settle-btn:hover{border-color:var(--ink-soft); color:var(--ink);}
-
-  .section-title{
-    font-family:'Noto Serif TC',serif; font-size:15px; font-weight:700; margin:30px 0 12px;
-    display:flex; align-items:center; gap:8px; color:var(--navy);
-  }
-  .section-title::before{content:""; width:6px; height:6px; background:var(--gold); border-radius:1px; transform:rotate(45deg);}
-
-  /* ---------- 月曆 ---------- */
-  .cal{background:var(--white); border-radius:var(--radius); padding:18px 18px 8px; box-shadow:var(--shadow);}
-  .cal-week{display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-size:12px; color:var(--ink-soft); padding-bottom:8px; border-bottom:1px solid var(--paper-line); margin-bottom:8px;}
-  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px;}
-  .cal-cell{
-    min-height:90px; border-radius:10px; padding:7px 6px; cursor:pointer; position:relative;
-    border:1px solid transparent; transition:.12s;
-  }
-  .cal-cell:hover{border-color:var(--gold-soft); background:#FBF8EF;}
-  .cal-cell.empty{cursor:default;}
-  .cal-cell.empty:hover{border-color:transparent; background:none;}
-  .cal-cell.today{background:var(--jade-soft);}
-  .cal-day-num{font-size:12.5px; font-weight:600; color:var(--ink-soft);}
-  .cal-cell.today .cal-day-num{color:var(--jade);}
-  .cal-day-sum{font-size:11px; margin-top:20px; text-align:right;}
-  .cal-day-amounts{margin-top:10px; text-align:right; line-height:1.5;}
-  .cal-amt{font-size:10px; font-weight:700; letter-spacing:.01em;}
-  .cal-amt.ina{color:var(--seal-red);}
-  .cal-amt.ugg{color:var(--jade);}
-  .cal-dots{position:absolute; left:7px; bottom:8px; display:flex; gap:3px;}
-  .dot{width:5px; height:5px; border-radius:50%;}
-  .dot.expense{background:var(--navy);}
-  .dot.debt{background:var(--seal-red);}
-
-  /* ---------- Modal 內月份導覽（明細欄月份選擇） ---------- */
-  .modal-month-nav{display:flex; align-items:center; gap:6px; position:relative;}
-  .modal-month-nav button.mm-arrow{
-    background:var(--paper); border:1px solid var(--paper-line); color:var(--navy);
-    width:26px; height:26px; border-radius:7px; cursor:pointer; font-size:13px;
-    display:flex;align-items:center;justify-content:center;
-  }
-  .modal-month-nav button.mm-arrow:hover{background:var(--gold-soft);}
-  .modal-month-nav .mm-label{
-    font-family:'Noto Serif TC',serif; font-size:13px; background:none; border:none; cursor:pointer;
-    color:var(--navy); padding:4px 6px; border-radius:6px;
-  }
-  .modal-month-nav .mm-label:hover{background:var(--paper);}
-  .modal-month-picker{
-    display:none; gap:6px; position:absolute; top:34px; right:0; z-index:10;
-    background:var(--white); border-radius:10px; padding:9px; box-shadow:var(--shadow);
-  }
-  .modal-month-picker.open{display:flex;}
-  .modal-month-picker select{
-    padding:6px 8px; border-radius:7px; border:1px solid var(--paper-line); background:var(--paper);
-    font-size:12.5px; color:var(--ink); font-family:'Noto Sans TC', sans-serif;
-  }
-
-  /* ---------- 結清日期／方式 標記 ---------- */
-  .settle-meta{font-size:11px; color:var(--jade); margin-top:1px;}
-
-  /* ---------- 結清方式表單 Modal ---------- */
-  .settle-summary{
-    background:var(--paper); border-radius:10px; padding:12px 14px; margin-bottom:16px;
-    font-size:13px; color:var(--ink-soft); line-height:1.6;
-  }
-  .settle-summary b{color:var(--navy);}
-  .method-toggle{display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;}
-  .method-toggle button{
-    flex:1; min-width:80px; padding:9px; border-radius:9px; border:1.5px solid var(--paper-line); background:none;
-    font-size:13px; cursor:pointer; color:var(--ink-soft); font-weight:600;
-  }
-  .method-toggle button.active{border-color:var(--jade); color:var(--jade); background:var(--jade-soft);}
-
-  /* ---------- 循環代墊欄位 ---------- */
-  .recurring-toggle{
-    display:flex; align-items:center; gap:8px; margin:2px 0 14px; padding:9px 11px;
-    background:var(--paper); border-radius:9px; cursor:pointer; font-size:13px; color:var(--ink);
-  }
-  .recurring-toggle input{width:16px; height:16px; accent-color:var(--jade); cursor:pointer;}
-  .recurring-fields{display:none; padding:2px 0 4px;}
-  .recurring-fields.show{display:block;}
-  .recurring-tag{
-    display:inline-block; font-size:10.5px; color:var(--jade); background:var(--jade-soft);
-    padding:1px 6px; border-radius:6px; margin-left:5px; vertical-align:middle;
-  }
-
-  /* ---------- Modal ---------- */
-  .overlay{
-    position:fixed; inset:0; background:rgba(20,26,38,.55); backdrop-filter:blur(2px);
-    display:none; align-items:center; justify-content:center; z-index:50; padding:20px;
-  }
-  .overlay.open{display:flex;}
-  .modal{
-    background:var(--white); border-radius:16px; width:100%; max-width:440px;
-    max-height:86vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.3);
+  .modal-box{
+    background:var(--card);
+    border-radius:12px;
+    max-width:560px;
+    width:100%;
+    max-height:82vh;
+    overflow-y:auto;
+    padding:22px;
   }
   .modal-head{
-    padding:18px 20px; border-bottom:1px solid var(--paper-line); display:flex; justify-content:space-between; align-items:center;
-    position:sticky; top:0; background:var(--white);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:16px;
   }
-  .modal-head h3{margin:0; font-family:'Noto Serif TC',serif; font-size:17px; color:var(--navy);}
-  .modal-close{background:none; border:none; font-size:20px; cursor:pointer; color:var(--ink-soft); line-height:1;}
-  .modal-body{padding:16px 20px 22px;}
+  .modal-head h3{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:16px;
+    margin:0;
+  }
+  .modal-close{
+    border:1px solid var(--line);
+    background:var(--card);
+    border-radius:6px;
+    width:28px; height:28px;
+    cursor:pointer;
+    color:var(--ink-soft);
+  }
+  .modal-close:hover{ background:var(--low-bg); }
+  .modal-box .cards{ gap:10px; }
+  .modal-empty{ color:var(--muted); font-size:13px; text-align:center; padding:20px 0; }
 
-  .tx-item{
-    display:flex; align-items:center; gap:10px; padding:11px 0; border-bottom:1px solid var(--paper-line);
+  .complete-modal-box{ max-width:420px; }
+  .complete-modal-box .field{ margin-bottom:14px; }
+  .complete-modal-actions{
+    display:flex;
+    gap:10px;
+    margin-top:4px;
   }
-  .tx-item:last-child{border-bottom:none;}
-  .tx-icon{width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:16px; flex:0 0 auto;}
-  .tx-icon.type-expense{background:#E7E2D3;}
-  .tx-icon.type-debt{background:var(--seal-red-soft);}
-  .tx-mid{flex:1; min-width:0;}
-  .tx-mid .name{font-size:13.5px; font-weight:500;}
-  .tx-mid .meta{font-size:11.5px; color:var(--ink-soft); margin-top:1px;}
-  .tx-amt{font-size:13.5px; text-align:right; white-space:nowrap;}
-  .tx-actions{display:flex; gap:4px; margin-left:4px;}
-  .tx-actions button{
-    border:none; background:none; cursor:pointer; font-size:13px; color:var(--ink-soft); padding:4px;
-  }
-  .tx-actions button:hover{color:var(--seal-red);}
-  .tx-actions button.tx-undo-btn{color:var(--gold);}
-  .tx-actions button.tx-undo-btn:hover{color:var(--navy);}
-  .tx-empty{padding:26px 0; text-align:center; color:var(--ink-soft); font-size:13px;}
+  .complete-modal-actions .cancel-edit-btn{ margin-top:0; }
+  .complete-modal-actions button{ flex:1; }
 
-  /* ---------- 本月收支明細 Modal ---------- */
-  .summary-group-title{
-    font-family:'Noto Serif TC',serif; font-size:13px; font-weight:700; color:var(--navy);
-    margin:18px 0 4px; display:flex; align-items:center; gap:6px;
-  }
-  .summary-group-title::before{content:""; width:5px; height:5px; background:var(--gold); border-radius:1px; transform:rotate(45deg);}
-  .day-add{
-    width:100%; margin-top:14px; padding:11px; border:1.5px dashed var(--gold); border-radius:10px;
-    background:none; color:var(--navy); font-weight:600; font-size:13.5px; cursor:pointer;
-  }
-  .day-add:hover{background:#FBF6E9;}
+  /* ---- contract loan feature ---- */
+  .loan-card.status-overdue .stripe{ background:var(--red); }
+  .loan-card.status-soon .stripe{ background:var(--amber); }
+  .loan-card.status-borrowed .stripe{ background:var(--teal); }
+  .loan-card.status-unlimited .stripe{ background:var(--note-line); }
+  .loan-card.status-returned{ opacity:0.6; }
+  .loan-card.status-returned .stripe{ background:var(--note-line); }
+  .loan-card.status-returned .title{ text-decoration:line-through; color:var(--muted); }
 
-  /* ---------- Form ---------- */
-  .field{margin-bottom:14px;}
-  .field label{display:block; font-size:12px; color:var(--ink-soft); margin-bottom:5px; letter-spacing:.02em;}
-  .field input, .field select, .field textarea{
-    width:100%; padding:9px 11px; border:1px solid var(--paper-line); border-radius:8px;
-    font-family:inherit; font-size:13.5px; background:var(--paper); color:var(--ink);
+  /* returned loans in list view: playful pill instead of dimmed/strikethrough,
+     matching how completed work items are shown in the list view */
+  .loan-card.done-playful{ opacity:1; background:var(--card); }
+  .loan-card.done-playful .stripe{ background:linear-gradient(180deg, #1B6E8C, #78BFD6); }
+  .loan-card.done-playful .title{ text-decoration:none; color:var(--ink); }
+  .returned-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    background:#DCEEF5;
+    color:#1B6E8C;
+    border-radius:20px;
+    padding:2px 10px;
+    font-size:11.5px;
+    font-weight:700;
+    font-family:'IBM Plex Mono',monospace;
+    margin-right:8px;
+    vertical-align:middle;
+    animation:done-pop .35s ease;
   }
-  .field textarea{resize:vertical; min-height:50px;}
-  .type-toggle{display:flex; gap:8px; margin-bottom:16px;}
-  .type-toggle button{
-    flex:1; padding:9px; border-radius:9px; border:1.5px solid var(--paper-line); background:none;
-    font-size:13px; cursor:pointer; color:var(--ink-soft); font-weight:600;
-  }
-  .type-toggle button.active.et-expense{border-color:var(--navy); color:var(--navy); background:#EEF1F5;}
-  .type-toggle button.active.et-debt{border-color:var(--seal-red); color:var(--seal-red); background:var(--seal-red-soft);}
-  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
-  .form-submit{
-    width:100%; padding:12px; border:none; border-radius:10px; background:var(--navy); color:var(--white);
-    font-weight:700; font-size:14px; cursor:pointer; margin-top:4px;
-  }
-  .form-submit:hover{background:var(--navy-deep);}
-  .hint{font-size:11.5px; color:var(--ink-soft); margin-top:10px; text-align:center;}
 
-  /* ---------- 代墊明細：分人小計 ---------- */
-  .summary-subgroup{margin-bottom:6px;}
-  .summary-subgroup-head{
-    display:flex; justify-content:space-between; align-items:center;
-    padding:8px 10px; background:var(--paper); border-radius:8px; margin:10px 0 2px;
-  }
-  .summary-subgroup-head .sg-name{font-size:12.5px; font-weight:700; color:var(--navy);}
-  .summary-subgroup-head .sg-total{font-size:12.5px; font-weight:700;}
-  .summary-subgroup-head.who-ina .sg-name{color:var(--seal-red);}
-  .summary-subgroup-head.who-ugg .sg-name{color:var(--jade);}
+  .badge.returned{ background:var(--low-bg); color:var(--teal-deep); }
 
-  /* ---------- Undo Toast ---------- */
-  .undo-toast{
-    position:fixed; left:50%; bottom:26px; transform:translate(-50%, 20px);
-    background:var(--navy-deep); color:var(--white); border-radius:12px;
-    padding:12px 14px 12px 18px; box-shadow:0 10px 30px rgba(0,0,0,.28);
-    display:flex; align-items:center; gap:14px; z-index:80;
-    opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease;
-    max-width:90vw;
-  }
-  .undo-toast.show{opacity:1; pointer-events:auto; transform:translate(-50%, 0);}
-  .undo-toast .ut-text{font-size:13px; white-space:nowrap;}
-  .undo-toast .ut-btn{
-    background:var(--gold); color:var(--navy-deep); border:none; border-radius:8px;
-    padding:7px 14px; font-weight:700; font-size:12.5px; cursor:pointer; white-space:nowrap;
-  }
-  .undo-toast .ut-close{
-    background:none; border:none; color:rgba(251,250,245,.6); cursor:pointer; font-size:15px; padding:2px;
+  @media (max-width:880px){
+    .layout{ grid-template-columns:1fr; }
+    .summary-sidebar{
+      position:static;
+      height:auto;
+      border-right:none;
+      border-bottom:1px solid var(--line);
+    }
+    .summary-sidebar-right{
+      position:static;
+      height:auto;
+      border-left:none;
+      border-top:1px solid var(--line);
+      order:3;
+    }
+    .summary-item{ flex-wrap:wrap; }
+    .card{
+      grid-template-columns:5px 1fr;
+    }
+    .actions{
+      grid-column:1 / -1;
+      flex-direction:row;
+      justify-content:flex-end;
+      margin-top:8px;
+    }
+    .stat-strip{ display:none; }
+    .cal-grid{ grid-auto-rows:80px; }
+    .cal-day{ height:80px; padding:5px; }
+    .chip{ font-size:9.5px; }
   }
 </style>
 </head>
 <body>
 
-<div class="wrap">
+<div class="topbar">
+  <div class="brand"><span class="mark"></span>INA-working schedule💣</div>
+  <div class="stat-strip">
+    <div class="stat"><b id="statTotal">0</b>總計</div>
+    <div class="stat"><b id="statActive">0</b>進行中</div>
+    <div class="stat"><b id="statHold">0</b>暫緩</div>
+    <div class="stat warn"><b id="statOverdue">0</b>已逾期</div>
+  </div>
+</div>
 
-  <!-- 封面 / Hero -->
-  <div class="cover">
-    <div class="cover-top">
+<!-- add / edit task modal -->
+<div class="modal-overlay" id="taskModalOverlay" style="display:none;">
+  <div class="modal-box task-modal-box panel">
+    <div class="modal-head">
       <div>
-        <span class="cover-eyebrow">Household Ledger</span>
-        <div class="cover-title">INA &amp; UGG 家帳收支存摺</div>
+        <h2 id="formTitle" style="margin:0 0 4px;">新增工作</h2>
+        <p class="hint" id="formHint" style="margin:0;">填寫後按下方按鈕加入清單</p>
       </div>
-      <div class="month-nav">
-        <button onclick="changeMonth(-1)">‹</button>
-        <button class="label" id="monthLabelBtn" onclick="togglePicker(event)"></button>
-        <button onclick="changeMonth(1)">›</button>
-        <button class="today-btn" onclick="goToToday()">今天</button>
-        <div class="month-picker" id="monthPicker">
-          <select id="pickYear" onchange="jumpToPicker()"></select>
-          <select id="pickMonth" onchange="jumpToPicker()"></select>
+      <button type="button" class="modal-close" id="taskModalClose">✕</button>
+    </div>
+
+    <form id="taskForm">
+      <div class="field">
+        <label for="title">工作名稱 / 內容說明</label>
+        <textarea id="title" required placeholder="例：完成 Q3 財報彙整"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="source">工作來源</label>
+        <input type="text" id="source" placeholder="例：主管指派、客戶來信、系統派工">
+      </div>
+
+      <div class="field">
+        <label for="progress">進度說明</label>
+        <textarea id="progress" placeholder="例：已完成初稿，待主管確認"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="category">工作類別</label>
+        <select id="category">
+          <option value="">其他</option>
+          <option value="請假">請假</option>
+          <option value="會議">會議</option>
+          <option value="公差">公差</option>
+          <option value="法務">法務</option>
+        </select>
+        <div class="field-legend">
+          <span class="legend-item"><span class="swatch cat-leave"></span>請假</span>
+          <span class="legend-item"><span class="swatch cat-meeting"></span>會議</span>
+          <span class="legend-item"><span class="swatch cat-trip"></span>公差</span>
+          <span class="legend-item"><span class="swatch cat-legal"></span>法務</span>
+          <span class="legend-item"><span class="swatch cat-none"></span>其他</span>
         </div>
       </div>
-    </div>
-    <div class="cover-figure">
-      <button class="add-btn" onclick="openForm(todayStr())">＋ 新增一筆</button>
-    </div>
-  </div>
 
-  <!-- 債務印章 -->
-  <div class="seal-row" id="sealRow"></div>
-
-  <!-- 月曆 -->
-  <div class="section-title">月度總表</div>
-  <div class="cal">
-    <div class="cal-week">
-      <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
-    </div>
-    <div class="cal-grid" id="calGrid"></div>
-  </div>
-
-  <div class="hint">＊資料已同步儲存於 Supabase 雲端資料庫，重新整理頁面不會遺失紀錄。</div>
-</div>
-
-<!-- Modal: 當日明細 -->
-<div class="overlay" id="dayOverlay">
-  <div class="modal">
-    <div class="modal-head">
-      <h3 id="dayModalTitle">日期明細</h3>
-      <button class="modal-close" onclick="closeModal('dayOverlay')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div id="dayTxList"></div>
-      <button class="day-add" id="dayAddBtn">＋ 新增這天的紀錄</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal: 本月收支明細（點擊藍框卡片開啟） -->
-<div class="overlay" id="summaryOverlay">
-  <div class="modal">
-    <div class="modal-head">
-      <h3 id="summaryModalTitle">本月收支明細</h3>
-      <div style="display:flex; align-items:center; gap:8px;">
-        <div class="modal-month-nav">
-          <button class="mm-arrow" onclick="changeSummaryMonth(-1)">‹</button>
-          <button class="mm-label" id="summaryMonthLabel" onclick="toggleSummaryPicker(event)"></button>
-          <button class="mm-arrow" onclick="changeSummaryMonth(1)">›</button>
-          <div class="modal-month-picker" id="summaryMonthPicker">
-            <select id="summaryPickYear" onchange="jumpSummaryPicker()"></select>
-            <select id="summaryPickMonth" onchange="jumpSummaryPicker()"></select>
-          </div>
+      <div class="field">
+        <label for="received" id="receivedLabel">收到工作的日期</label>
+        <div class="row">
+          <input type="date" id="received" required>
+          <button type="button" id="nowBtn">今天</button>
         </div>
-        <button class="modal-close" onclick="closeModal('summaryOverlay')">✕</button>
+      </div>
+
+      <div class="field" id="urgencyField">
+        <label>緊急程度</label>
+        <div class="urgency-picker">
+          <input type="radio" name="urgency" id="u-top" value="top">
+          <label class="u-top" for="u-top">最急件</label>
+          <input type="radio" name="urgency" id="u-high" value="high">
+          <label class="u-high" for="u-high">急件</label>
+          <input type="radio" name="urgency" id="u-normal" value="normal" checked>
+          <label class="u-normal" for="u-normal">普通件</label>
+          <input type="radio" name="urgency" id="u-note" value="note">
+          <label class="u-note" for="u-note">備註</label>
+        </div>
+        <div class="field-legend">
+          <span class="legend-item"><span class="dot dot-top"></span>最急件</span>
+          <span class="legend-item"><span class="dot dot-high"></span>急件</span>
+          <span class="legend-item"><span class="dot dot-normal"></span>普通件</span>
+          <span class="legend-item"><span class="dot dot-note"></span>備註</span>
+        </div>
+      </div>
+
+      <div class="field" id="deadlineField">
+        <label for="deadline">結案日期</label>
+        <div class="row">
+          <input type="date" id="deadline" required>
+          <label class="unlimited-toggle"><input type="checkbox" id="deadlineUnlimited"> 不限</label>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">加入工作清單</button>
+      <button type="button" class="cancel-edit-btn" id="cancelEditBtn" style="display:none;">取消編輯</button>
+    </form>
+  </div>
+</div>
+
+<div class="layout" id="scheduleView">
+  <!-- SUMMARY SIDEBAR -->
+  <div class="summary-sidebar">
+    <div class="summary-section">
+      <div class="summary-col">
+        <div class="summary-head">
+          <h2>本週待辦工作</h2>
+          <span class="summary-range" id="thisWeekRange"></span>
+        </div>
+        <div class="summary-list" id="thisWeekList"></div>
+      </div>
+      <div class="summary-col">
+        <div class="summary-head">
+          <h2>未完成的工作項目</h2>
+          <span class="summary-range">過去週數</span>
+        </div>
+        <div class="summary-groups" id="overdueGroups"></div>
+      </div>
+      <div class="summary-col">
+        <div class="summary-head">
+          <h2>暫緩中的工作項目</h2>
+        </div>
+        <div class="summary-list" id="onHoldList"></div>
       </div>
     </div>
-    <div class="modal-body">
-      <div id="summaryTxList"></div>
-    </div>
   </div>
-</div>
 
-<!-- Modal: 新增/編輯表單 -->
-<div class="overlay" id="formOverlay">
-  <div class="modal">
-    <div class="modal-head">
-      <h3 id="formModalTitle">新增紀錄</h3>
-      <button class="modal-close" onclick="closeModal('formOverlay')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="type-toggle">
-        <button type="button" class="et-expense" id="btnTypeExpense" onclick="setFormType('expense')">代墊</button>
-        <button type="button" class="et-debt" id="btnTypeDebt" onclick="setFormType('debt')">借款</button>
+  <!-- MAIN -->
+  <div class="main">
+    <div class="list-head">
+      <h1>所有工作</h1>
+      <div class="controls-top">
+        <input type="search" id="searchInput" class="search-input" placeholder="🔍 搜尋工作名稱或來源">
+        <div class="seg view-seg" id="viewSeg">
+          <button data-view="calendar" class="active">📅 日曆檢視</button>
+          <button data-view="list">📋 清單檢視</button>
+        </div>
+        <button type="button" class="add-task-btn" id="openAddTaskBtn">＋ 新增工作</button>
+        <button type="button" class="add-task-btn loan-btn" id="openAddLoanBtn">＋ 新增合約</button>
       </div>
-      <form id="txForm" onsubmit="saveTransaction(event)">
-        <input type="hidden" id="fEditId">
-        <input type="hidden" id="fRecurringGroup">
-        <div class="field">
-          <label>日期</label>
-          <input type="date" id="fDate" required>
-        </div>
-
-        <div id="expenseFields">
-          <div class="two-col">
-            <div class="field">
-              <label>分類</label>
-              <select id="fCategory">
-                <option value="飲食">🍜 飲食</option>
-                <option value="居家">🏠 居家</option>
-                <option value="交通">🚗 交通</option>
-                <option value="娛樂">🎬 娛樂</option>
-                <option value="醫療">💊 醫療</option>
-                <option value="現金">💵 現金</option>
-                <option value="其他">📎 其他</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>付款人</label>
-              <select id="fPayer">
-                <option value="UGG">UGG</option>
-                <option value="INA">INA</option>
-              </select>
-            </div>
-          </div>
-
-          <label class="recurring-toggle" id="recurringToggleLabel">
-            <input type="checkbox" id="fRecurring" onchange="toggleRecurringFields()">
-            <span>🔁 設定為定期循環代墊（例如每月固定代墊房租）</span>
-          </label>
-          <div class="recurring-fields" id="recurringFields">
-            <div class="two-col">
-              <div class="field">
-                <label>每月幾號代墊</label>
-                <select id="fRecurringDay"></select>
-              </div>
-              <div class="field">
-                <label>循環至（含當月）</label>
-                <input type="month" id="fRecurringUntil">
-              </div>
-            </div>
-            <div class="hint" style="text-align:left; margin-top:-6px;">會從這筆紀錄的年月開始，每月同一天自動建立一筆代墊，直到你設定的年月為止。</div>
-          </div>
-        </div>
-
-        <div id="debtFields" style="display:none;">
-          <div class="two-col">
-            <div class="field">
-              <label>出借人</label>
-              <select id="fLender">
-                <option value="UGG">UGG</option>
-                <option value="INA">INA</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>借款人</label>
-              <select id="fBorrower">
-                <option value="INA">INA</option>
-                <option value="UGG">UGG</option>
-              </select>
-            </div>
-          </div>
-          <div class="field">
-            <label>分類</label>
-            <select id="fDebtCategory">
-              <option value="飲食">🍜 飲食</option>
-              <option value="居家">🏠 居家</option>
-              <option value="交通">🚗 交通</option>
-              <option value="娛樂">🎬 娛樂</option>
-              <option value="醫療">💊 醫療</option>
-              <option value="現金">💵 現金</option>
-              <option value="其他">📎 其他</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="two-col">
-          <div class="field">
-            <label>金額 (NT$)</label>
-            <input type="number" id="fAmount" min="0" step="1" required>
-          </div>
-          <div class="field">
-            <label>備註</label>
-            <input type="text" id="fNote" placeholder="例如：代墊房租">
-          </div>
-        </div>
-
-        <button type="submit" class="form-submit" id="fSubmitBtn">儲存紀錄</button>
-      </form>
     </div>
-  </div>
-</div>
 
-<!-- Modal: 一鍵結清 - 填寫結清方式與日期 -->
-<div class="overlay" id="settleOverlay">
-  <div class="modal">
-    <div class="modal-head">
-      <h3>結清本月債務</h3>
-      <button class="modal-close" onclick="closeModal('settleOverlay')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="settle-summary" id="settleSummaryText"></div>
-      <form id="settleForm" onsubmit="confirmSettle(event)">
-        <div class="field">
-          <label>結清方式</label>
-          <div class="method-toggle" id="methodToggle">
-            <button type="button" data-v="匯款" onclick="pickSettleMethod('匯款')">💸 匯款</button>
-            <button type="button" data-v="現金" onclick="pickSettleMethod('現金')">💵 現金</button>
-            <button type="button" data-v="其他" onclick="pickSettleMethod('其他')">📎 其他</button>
-          </div>
-        </div>
-        <div class="field">
-          <label>結清日期</label>
-          <input type="date" id="settleDate" required>
-        </div>
-        <div class="field">
-          <label>備註（選填）</label>
-          <input type="text" id="settleNote" placeholder="例如：已用玉山銀行轉帳">
-        </div>
-        <button type="submit" class="form-submit">確認結清</button>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- Modal: 循環代墊 - 整組修改 -->
-<div class="overlay" id="recurringEditOverlay">
-  <div class="modal">
-    <div class="modal-head">
-      <h3>編輯整組循環代墊</h3>
-      <button class="modal-close" onclick="closeModal('recurringEditOverlay')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="hint" style="text-align:left; margin:0 0 14px;">
-        這組循環代墊共有 <b id="recurCount">0</b> 筆紀錄。修改後會套用到「尚未結清」的紀錄；若要連同已結清的紀錄一起修改，請勾選下方選項。
+    <div class="filter-bar" id="filterBar">
+      <div class="filter-group">
+        <span class="filter-label">類別</span>
+        <select id="categoryFilterSelect" class="source-select"></select>
       </div>
-      <form id="recurringEditForm" onsubmit="saveRecurringEdit(event)">
-        <div class="two-col">
-          <div class="field">
-            <label>分類</label>
-            <select id="recurCategory">
-              <option value="飲食">🍜 飲食</option>
-              <option value="居家">🏠 居家</option>
-              <option value="交通">🚗 交通</option>
-              <option value="娛樂">🎬 娛樂</option>
-              <option value="醫療">💊 醫療</option>
-              <option value="現金">💵 現金</option>
-              <option value="其他">📎 其他</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>付款人</label>
-            <select id="recurPayer">
-              <option value="UGG">UGG</option>
-              <option value="INA">INA</option>
-            </select>
-          </div>
+      <div class="filter-group">
+        <span class="filter-label">狀態</span>
+        <select id="statusFilterSelect" class="source-select">
+          <option value="active">進行中</option>
+          <option value="all" selected>全部</option>
+          <option value="hold">暫緩</option>
+          <option value="done">已完成</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">緊急度</span>
+        <select id="urgencyFilterSelect" class="source-select">
+          <option value="all" selected>全部</option>
+          <option value="top">最急件</option>
+          <option value="high">急件</option>
+          <option value="normal">普通件</option>
+          <option value="note">備註</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">來源</span>
+        <select id="sourceFilter" class="source-select">
+          <option value="all">全部來源</option>
+        </select>
+      </div>
+      <button type="button" class="filter-reset" id="filterResetBtn" style="display:none;">✕ 清除篩選</button>
+    </div>
+    <div class="filter-summary" id="filterSummary"></div>
+
+    <!-- calendar view -->
+    <div id="calendarWrap">
+      <div class="cal-nav">
+        <select class="cal-select" id="calYearSelect"></select>
+        <select class="cal-select" id="calMonthSelect"></select>
+        <button class="nav-btn today-btn" id="calToday">今天</button>
+      </div>
+
+      <div id="monthView">
+        <div class="cal-weekdays">
+          <span class="sun">日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span class="sat">六</span>
         </div>
-        <div class="two-col">
-          <div class="field">
-            <label>金額 (NT$)</label>
-            <input type="number" id="recurAmount" min="0" step="1" required>
-          </div>
-          <div class="field">
-            <label>備註</label>
-            <input type="text" id="recurNote" placeholder="例如：代墊房租">
-          </div>
+        <div class="cal-grid" id="calGrid"></div>
+      </div>
+    </div>
+
+    <!-- list view: flat, scannable list of everything the current filters match -->
+    <div id="listViewWrap" style="display:none;">
+      <div class="list-view-toolbar">
+        <span class="list-view-count" id="listViewCount"></span>
+        <select class="source-select" id="listSortSelect">
+          <option value="deadline">依結案日期排序</option>
+          <option value="received">依收到日期排序</option>
+          <option value="urgency">依緊急度排序</option>
+        </select>
+      </div>
+      <div class="cards" id="taskCards"></div>
+      <div class="empty" id="taskCardsEmpty" style="display:none;">
+        <div class="big">找不到符合條件的工作</div>
+        目前的篩選條件下沒有工作項目，試試清除篩選或切換類別
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="summary-sidebar-right">
+    <div class="summary-section">
+      <div class="summary-col">
+        <div class="summary-head">
+          <h2>本週會議事項</h2>
+          <span class="summary-range" id="thisWeekMeetingRange"></span>
         </div>
-        <label class="recurring-toggle">
-          <input type="checkbox" id="recurIncludeSettled">
-          <span>連同已結清的紀錄一併修改</span>
-        </label>
-        <button type="submit" class="form-submit">套用到整組循環代墊</button>
-      </form>
+        <div class="summary-list" id="thisWeekMeetingList"></div>
+      </div>
+      <div class="summary-col">
+        <div class="summary-head">
+          <h2>本週出差</h2>
+          <span class="summary-range" id="thisWeekTripRange"></span>
+        </div>
+        <div class="summary-list" id="thisWeekTripList"></div>
+      </div>
+      <div class="summary-col">
+        <div class="summary-head">
+          <h2>合約借閱</h2>
+          <span class="summary-range" id="loanSidebarRange"></span>
+        </div>
+        <div class="summary-list" id="loanSidebarList"></div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Undo Toast：一鍵結清後的復原提示 -->
-<div class="undo-toast" id="undoToast">
-  <span class="ut-text" id="undoToastText">已結清 0 筆紀錄</span>
-  <button class="ut-btn" onclick="undoSettle()">復原</button>
-  <button class="ut-close" title="關閉" onclick="hideUndoToast()">✕</button>
+<!-- add / edit contract loan modal -->
+<div class="modal-overlay" id="loanModalOverlay" style="display:none;">
+  <div class="modal-box task-modal-box panel">
+    <div class="modal-head">
+      <div>
+        <h2 id="loanFormTitle" style="margin:0 0 4px;">新增借閱紀錄</h2>
+        <p class="hint" style="margin:0;">填寫合約正本借出資訊，歸還後可標記為已歸還</p>
+      </div>
+      <button type="button" class="modal-close" id="loanModalClose">✕</button>
+    </div>
+
+    <form id="loanForm">
+      <div class="field">
+        <label for="loanContractName">合約名稱／編號</label>
+        <input type="text" id="loanContractName" required placeholder="例：114年度辦公室租賃合約">
+      </div>
+
+      <div class="field">
+        <label for="loanBorrower">借閱人</label>
+        <input type="text" id="loanBorrower" required placeholder="例：王小明">
+      </div>
+
+      <div class="field">
+        <label for="loanDepartment">借閱單位／部門</label>
+        <input type="text" id="loanDepartment" placeholder="例：法務室">
+      </div>
+
+      <div class="field">
+        <label for="loanDate">借出日期</label>
+        <div class="row">
+          <input type="date" id="loanDate" required>
+          <button type="button" id="loanNowBtn">今天</button>
+        </div>
+      </div>
+
+      <div class="field" id="loanExpectedField">
+        <label for="loanExpectedReturn">預計歸還日期</label>
+        <div class="row">
+          <input type="date" id="loanExpectedReturn">
+          <label class="unlimited-toggle"><input type="checkbox" id="loanExpectedUnlimited"> 未定</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="loanPurpose">借閱事由</label>
+        <textarea id="loanPurpose" placeholder="例：提供會計師查核用"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="loanNote">備註</label>
+        <textarea id="loanNote" placeholder="補充說明..."></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn" id="loanSubmitBtn">新增借閱紀錄</button>
+      <button type="button" class="cancel-edit-btn" id="loanCancelEditBtn" style="display:none;">取消編輯</button>
+    </form>
+  </div>
+</div>
+
+<!-- mark loan as returned modal -->
+<div class="modal-overlay" id="loanReturnModalOverlay" style="display:none;">
+  <div class="modal-box complete-modal-box">
+    <div class="modal-head">
+      <h3>標記歸還</h3>
+      <button class="modal-close" id="loanReturnModalClose">✕</button>
+    </div>
+    <form id="loanReturnForm">
+      <div class="field">
+        <label for="loanReturnDate">實際歸還日期</label>
+        <input type="date" id="loanReturnDate" required>
+      </div>
+      <div class="field">
+        <label for="loanReturnNote">說明欄（選填）</label>
+        <textarea id="loanReturnNote" placeholder="補充說明，例如經手人、狀況..."></textarea>
+      </div>
+      <div class="complete-modal-actions">
+        <button type="button" class="cancel-edit-btn" id="loanReturnCancelBtn">取消</button>
+        <button type="submit" class="submit-btn">確認歸還</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- day detail modal -->
+<div class="modal-overlay" id="modalOverlay" style="display:none;">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="modalTitle"></h3>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="cards" id="modalCards"></div>
+  </div>
+</div>
+
+<!-- work item detail modal (opened by clicking an item in the sidebar summary lists) -->
+<div class="modal-overlay" id="itemDetailModalOverlay" style="display:none;">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="itemDetailTitle">工作項目詳情</h3>
+      <button class="modal-close" id="itemDetailModalClose">✕</button>
+    </div>
+    <div class="cards" id="itemDetailCards"></div>
+  </div>
+</div>
+
+<!-- mark-as-done modal -->
+<div class="modal-overlay" id="completeModalOverlay" style="display:none;">
+  <div class="modal-box complete-modal-box">
+    <div class="modal-head">
+      <h3>標記完成</h3>
+      <button class="modal-close" id="completeModalClose">✕</button>
+    </div>
+    <form id="completeForm">
+      <div class="field">
+        <label for="completedAt">完成時間</label>
+        <input type="date" id="completedAt" required>
+      </div>
+      <div class="field">
+        <label for="completeNote">說明欄（選填）</label>
+        <textarea id="completeNote" placeholder="補充說明，例如交付結果、備註事項..."></textarea>
+      </div>
+      <div class="complete-modal-actions">
+        <button type="button" class="cancel-edit-btn" id="completeCancelBtn">取消</button>
+        <button type="submit" class="submit-btn">確認完成</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- mark/unmark-hold modal -->
+<div class="modal-overlay" id="holdModalOverlay" style="display:none;">
+  <div class="modal-box complete-modal-box">
+    <div class="modal-head">
+      <h3 id="holdModalTitle">標記暫緩</h3>
+      <button class="modal-close" id="holdModalClose">✕</button>
+    </div>
+    <form id="holdForm">
+      <div class="field">
+        <label for="holdNote">說明欄（選填）</label>
+        <textarea id="holdNote" placeholder="補充說明，例如暫緩原因、復工條件..."></textarea>
+      </div>
+      <div class="complete-modal-actions">
+        <button type="button" class="cancel-edit-btn" id="holdCancelBtn">取消</button>
+        <button type="submit" class="submit-btn" id="holdSubmitBtn">確認</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* ================= Supabase 連線設定 ================= */
-const SUPABASE_URL = 'https://sbeffokvaugjiokmulbz.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_l5ByiaTmPOofL24JXM_GOQ_s3LofVok';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-const TABLE = 'transactions';
+(function(){
+  // ==== Supabase 設定：請填入你自己專案的 Project URL 與 anon public key ====
+  const SUPABASE_URL = 'https://svcsjkvzzddimfqjxwvj.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_-mDe3WCxiH3lJ_Awh9TBkQ_XNM34QFY';
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const TABLE = 'tasks';
+  const LOAN_TABLE = 'contract_loans';
 
-/* ================= 資料層（雲端 Supabase 儲存） ================= */
-const CATEGORY_ICON = {飲食:'🍜', 居家:'🏠', 交通:'🚗', 娛樂:'🎬', 醫療:'💊', 現金:'💵', 其他:'📎'};
-
-function pad(n){return String(n).padStart(2,'0');}
-function fmtDate(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;}
-function todayStr(){return fmtDate(new Date());}
-function money(n){return 'NT$ ' + Number(n).toLocaleString('zh-Hant-TW');}
-
-const today = new Date();
-const Y = today.getFullYear(), M = today.getMonth();
-
-let transactions = [];
-let viewYear = Y, viewMonth = M;
-let currentDayStr = null;
-let formType = 'expense';
-let loading = true;
-
-// 「一鍵結清」復原機制：暫存結清前的一瞬間狀態（id -> 原本的 status）
-let lastSettledIds = [];
-let undoToastTimer = null;
-
-/* 固定復原按鈕：只要該筆紀錄目前是「已結清」，任何人、任何時候都能點擊復原（不依賴當次瀏覽器狀態） */
-function undoBtnHtml(t){
-  if(t.status!=='settled') return '';
-  return `<button class="tx-undo-btn" title="復原這一筆結清" onclick="undoSettleOne(${t.id})">↺</button>`;
-}
-
-/* ---- 從 Supabase 讀取全部紀錄 ---- */
-async function loadTransactions(){
-  const { data, error } = await sb.from(TABLE).select('*').order('date', {ascending:true});
-  if(error){
-    console.error(error);
-    alert('讀取資料失敗，請確認 Supabase 資料表與連線設定是否正確：\n' + error.message);
-    loading = false;
-    return;
+  // Some fields (category / completed_at / complete_note) are newer additions.
+  // If the Supabase table hasn't had those columns added yet, PostgREST returns
+  // an "unknown column" error. Rather than failing the whole save, we detect
+  // that specific error, drop the offending column from the payload, and retry
+  // — so core fields still save even before the table is migrated.
+  function extractMissingColumn(error){
+    if(!error || !error.message) return null;
+    const m = /Could not find the '([\w]+)' column/i.exec(error.message)
+      || /column "?([\w]+)"? .*does not exist/i.exec(error.message);
+    return m ? m[1] : null;
   }
-  transactions = data || [];
-  loading = false;
-  renderAll();
-  if(currentDayStr && document.getElementById('dayOverlay').classList.contains('open')){
-    renderDayList();
-  }
-}
-
-/* ================= 渲染 ================= */
-function renderAll(){
-  renderHero();
-  renderSeal();
-  renderCalendar();
-}
-
-function monthTxFor(y, m){
-  const prefix = `${y}-${pad(m+1)}`;
-  return transactions.filter(t => t.date.startsWith(prefix));
-}
-function monthTx(){
-  return monthTxFor(viewYear, viewMonth);
-}
-
-function renderHero(){
-  document.getElementById('monthLabelBtn').textContent = `${viewYear} 年 ${viewMonth+1} 月`;
-}
-
-function netDebtForMonth(y, m){
-  // 正值代表「UGG」欠「INA」；負值代表「INA」欠「UGG」
-  // 「代墊」與「借款」合併計算為該月最終互欠金額（每月分別結清，因此只看該月未結清紀錄）：
-  //   借款：出借人(lender) 借給 借款人(borrower) => borrower 欠 lender 這筆錢
-  //   代墊：付款人(payer) 幫對方代墊 => 對方（非付款人）欠 payer 這筆錢
-  let net = 0;
-  monthTxFor(y, m).forEach(t=>{
-    if(t.status === 'settled') return; // 已結清的紀錄不列入淨額計算
-    if(t.type === 'debt'){
-      if(t.lender==='INA' && t.borrower==='UGG') net += Number(t.amount);
-      if(t.lender==='UGG' && t.borrower==='INA') net -= Number(t.amount);
-    } else if(t.type === 'expense'){
-      if(t.payer==='INA') net += Number(t.amount);
-      if(t.payer==='UGG') net -= Number(t.amount);
+  async function resilientWrite(table, kind, payload, id){
+    let body = { ...payload };
+    let missingCols = [];
+    for(let attempt=0; attempt<6; attempt++){
+      const query = kind === 'insert'
+        ? sb.from(table).insert(body)
+        : sb.from(table).update(body).eq('id', id);
+      const { error } = await query;
+      if(!error) return { error:null, missingCols };
+      const col = extractMissingColumn(error);
+      if(col && col in body){
+        delete body[col];
+        missingCols.push(col);
+        continue;
+      }
+      return { error, missingCols };
     }
-  });
-  return net;
-}
-
-function renderSeal(){
-  const net = netDebtForMonth(viewYear, viewMonth);
-  const row = document.getElementById('sealRow');
-
-  let stampClass='even', label=`${viewYear}年${viewMonth+1}月 目前互不相欠`, sub='本月帳務已結清';
-  if(net > 0){ stampClass='owe'; label='本月 UGG 欠 INA'; sub = money(net); }
-  else if(net < 0){ stampClass='owed'; label='本月 INA 欠 UGG'; sub = money(-net); }
-
-  row.innerHTML = `
-    <div class="seal-card" onclick="openSummaryModal()">
-      <div class="seal-stamp ${stampClass}">${net===0 ? '結清' : '欠款'}</div>
-      <div class="seal-main seal-main--simple">
-        <div class="seal-text">
-          <div class="t1">本月淨債務餘額</div>
-          <div class="t2">${label}${net!==0 ? ' <span class="val">'+sub+'</span>' : ''}</div>
-        </div>
-      </div>
-      ${net!==0 ? '<button class="settle-btn" onclick="event.stopPropagation(); settleAll()">一鍵結清本月</button>' : ''}
-    </div>`;
-}
-
-/* ================= 一鍵結清（僅限單一月份） ================= */
-let pendingSettleList = [];
-let pendingSettleMethod = '匯款';
-
-function settleAll(){
-  // 只結清「目前檢視月份」尚未結清的紀錄，符合每月分別結清的規則
-  pendingSettleList = monthTx().filter(t=>t.status!=='settled');
-  if(pendingSettleList.length===0) return;
-  openSettleModal(viewYear, viewMonth, pendingSettleList);
-}
-
-function openSettleModal(y, m, list){
-  pendingSettleList = list;
-  const totalExpense = list.filter(t=>t.type==='expense').reduce((s,t)=>s+Number(t.amount),0);
-  const totalDebt = list.filter(t=>t.type==='debt').reduce((s,t)=>s+Number(t.amount),0);
-  document.getElementById('settleSummaryText').innerHTML =
-    `即將結清 <b>${y} 年 ${m+1} 月</b> 共 <b>${list.length}</b> 筆未結清紀錄<br>`+
-    `（代墊 ${money(totalExpense)}・借款 ${money(totalDebt)}）`;
-  pendingSettleMethod = '匯款';
-  document.querySelectorAll('#methodToggle button').forEach(b=>b.classList.toggle('active', b.dataset.v==='匯款'));
-  document.getElementById('settleDate').value = todayStr();
-  document.getElementById('settleNote').value = '';
-  document.getElementById('settleOverlay').classList.add('open');
-}
-
-function pickSettleMethod(v){
-  pendingSettleMethod = v;
-  document.querySelectorAll('#methodToggle button').forEach(b=>b.classList.toggle('active', b.dataset.v===v));
-}
-
-async function confirmSettle(e){
-  e.preventDefault();
-  if(pendingSettleList.length===0){ closeModal('settleOverlay'); return; }
-
-  const settleDate = document.getElementById('settleDate').value;
-  const note = document.getElementById('settleNote').value;
-  const settleMethod = note ? `${pendingSettleMethod}・${note}` : pendingSettleMethod;
-  const ids = pendingSettleList.map(t=>t.id);
-
-  const { error } = await sb.from(TABLE)
-    .update({ status:'settled', settle_date: settleDate, settle_method: settleMethod })
-    .in('id', ids);
-  if(error){
-    console.error(error);
-    alert('結清失敗：' + error.message + '\n（若欄位不存在，請先在 Supabase 資料表新增 settle_date / settle_method 欄位）');
-    return;
+    return { error:new Error('儲存失敗，欄位不符'), missingCols };
+  }
+  let schemaWarningShown = false;
+  function warnMissingColumns(cols){
+    if(!cols || cols.length === 0 || schemaWarningShown) return;
+    schemaWarningShown = true;
+    console.warn('Supabase 資料表缺少欄位，已略過儲存：', cols.join(', '), '－ 請至 Supabase 新增這些欄位，否則相關資料只會暫存在本機，重新整理後可能消失。');
   }
 
-  transactions.forEach(t=>{
-    if(ids.includes(t.id)){ t.status='settled'; t.settle_date=settleDate; t.settle_method=settleMethod; }
-  });
-  lastSettledIds = ids;
+  const STORAGE_KEY = 'worklog.tasks.v1';
+  const LOAN_STORAGE_KEY = 'worklog.loans.v1';
+  const urgencyLabel = { top:'最急件', high:'急件', normal:'普通件', note:'備註' };
+  const urgencyRank = { top:0, high:1, normal:2, note:3 };
+  const weekdayNames = ['日','一','二','三','四','五','六'];
 
-  closeModal('settleOverlay');
-  renderAll();
-  if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
-  if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
-  showUndoToast(ids.length);
-}
+  let tasks = [];
+  let filterMode = 'all';
+  let searchQuery = '';
+  let urgencyFilter = 'all';
+  let sourceFilter = 'all';
+  let categoryFilter = 'all';
+  let viewMode = 'calendar'; // 'calendar' | 'list'
+  let calRefDate = new Date();
+  let modalDateKey = null;
+  let editingId = null;
 
-/* ---- 復原（Undo）：把結清的紀錄狀態改回原本的狀態 ---- */
-function showUndoToast(count){
-  if(count<=0){ hideUndoToast(); return; }
-  const toast = document.getElementById('undoToast');
-  document.getElementById('undoToastText').textContent = `已結清 ${count} 筆紀錄`;
-  toast.classList.add('show');
-  if(undoToastTimer) clearTimeout(undoToastTimer);
-  // 10 秒後自動隱藏提示（但每一筆紀錄的復原按鈕仍會保留，直到下一次結清才會覆蓋）
-  undoToastTimer = setTimeout(hideUndoToast, 10000);
-}
+  let loans = [];
+  let editingLoanId = null;
+  let pendingReturnLoanId = null;
 
-function hideUndoToast(){
-  document.getElementById('undoToast').classList.remove('show');
-  if(undoToastTimer){ clearTimeout(undoToastTimer); undoToastTimer=null; }
-}
-
-/* 復原「剛才那次一鍵結清」的所有紀錄（來自結清提示 Toast） */
-async function undoSettle(){
-  if(!lastSettledIds || lastSettledIds.length===0){
-    hideUndoToast();
-    return;
-  }
-  await revertSettledIds(lastSettledIds);
-  lastSettledIds = [];
-  hideUndoToast();
-}
-
-/* 復原單獨一筆紀錄：畫面上每一筆已結清明細都會固定顯示「復原」按鈕，
-   不論當初是誰、在哪個裝置上按下結清，任何人隨時都能點擊復原。 */
-async function undoSettleOne(id){
-  await revertSettledIds([id]);
-  lastSettledIds = lastSettledIds.filter(x=>x!==id);
-  if(lastSettledIds.length===0) hideUndoToast();
-  else document.getElementById('undoToastText').textContent = `已結清 ${lastSettledIds.length} 筆紀錄`;
-}
-
-/* 共用的復原動作：把指定 id 清單的紀錄改回「未結清」，並清除結清方式／結清日期 */
-async function revertSettledIds(ids){
-  const { error } = await sb.from(TABLE)
-    .update({ status:'unpaid', settle_date:null, settle_method:null })
-    .in('id', ids);
-  if(error){
-    console.error(error);
-    alert('復原失敗：' + error.message);
-    return;
-  }
-  transactions.forEach(t=>{
-    if(ids.includes(t.id)){ t.status='unpaid'; t.settle_date=null; t.settle_method=null; }
-  });
-  renderAll();
-  if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
-  if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
-}
-
-/* ================= Modal：本月收支明細（藍框卡片） ================= */
-/* 明細彈窗自己的年月狀態，可獨立於首頁月曆切換瀏覽不同月份的明細 */
-let summaryYear = Y, summaryMonth = M;
-
-function settleMetaHtml(t){
-  if(t.status!=='settled') return '';
-  const d = t.settle_date ? t.settle_date.slice(5).replace('-','/') : '';
-  const method = t.settle_method || '';
-  const parts = [d, method].filter(Boolean).join('・');
-  return `<div class="settle-meta">✓ 已結清${parts?'・'+parts:''}</div>`;
-}
-
-function recurringTagHtml(t){
-  return t.recurring_group ? '<span class="recurring-tag">🔁 循環代墊</span>' : '';
-}
-
-/* 循環代墊：整組「編輯」與「刪除」按鈕（顯示在每一筆循環紀錄的操作列） */
-function recurringActionsHtml(t){
-  if(!t.recurring_group) return '';
-  const gid = t.recurring_group;
-  return `
-    <button title="編輯整組循環代墊" onclick="event.stopPropagation(); openRecurringEditModal('${gid}')">🔁✎</button>
-    <button title="刪除整組循環代墊" onclick="event.stopPropagation(); deleteRecurringGroup('${gid}')">🔁🗑</button>`;
-}
-
-function openSummaryModal(){
-  summaryYear = viewYear; summaryMonth = viewMonth;
-  renderSummaryList();
-  document.getElementById('summaryOverlay').classList.add('open');
-}
-
-function changeSummaryMonth(delta){
-  summaryMonth += delta;
-  if(summaryMonth<0){summaryMonth=11; summaryYear--;}
-  if(summaryMonth>11){summaryMonth=0; summaryYear++;}
-  renderSummaryList();
-}
-
-function toggleSummaryPicker(e){
-  e.stopPropagation();
-  const p = document.getElementById('summaryMonthPicker');
-  const willOpen = !p.classList.contains('open');
-  if(willOpen){
-    const ySel = document.getElementById('summaryPickYear');
-    const mSel = document.getElementById('summaryPickMonth');
-    ySel.innerHTML = '';
-    for(let y=summaryYear-6; y<=summaryYear+6; y++){
-      ySel.innerHTML += `<option value="${y}" ${y===summaryYear?'selected':''}>${y} 年</option>`;
-    }
-    mSel.innerHTML = '';
-    for(let m=0;m<12;m++){
-      mSel.innerHTML += `<option value="${m}" ${m===summaryMonth?'selected':''}>${m+1} 月</option>`;
-    }
-    p.classList.add('open');
-  } else {
-    p.classList.remove('open');
-  }
-}
-
-function jumpSummaryPicker(){
-  summaryYear = Number(document.getElementById('summaryPickYear').value);
-  summaryMonth = Number(document.getElementById('summaryPickMonth').value);
-  document.getElementById('summaryMonthPicker').classList.remove('open');
-  renderSummaryList();
-}
-
-document.addEventListener('click', (e)=>{
-  const picker = document.getElementById('summaryMonthPicker');
-  const btn = document.getElementById('summaryMonthLabel');
-  if(picker && picker.classList.contains('open') && !picker.contains(e.target) && e.target!==btn){
-    picker.classList.remove('open');
-  }
-});
-
-function renderSummaryList(){
-  document.getElementById('summaryModalTitle').textContent = `${summaryYear} 年 ${summaryMonth+1} 月 收支明細`;
-  document.getElementById('summaryMonthLabel').textContent = `${summaryYear} 年 ${summaryMonth+1} 月`;
-
-  const list = monthTxFor(summaryYear, summaryMonth);
-  const net = netDebtForMonth(summaryYear, summaryMonth);
-  const expenses = list.filter(t=>t.type==='expense').slice().sort((a,b)=> a.date<b.date?1:-1);
-  const debts = list.filter(t=>t.type==='debt').slice().sort((a,b)=> a.date<b.date?1:-1);
-
-  let html = net===0
-    ? `<div class="hint" style="margin:0 0 14px;">本月未結清淨額：互不相欠</div>`
-    : `<div class="hint" style="margin:0 0 14px;">本月未結清淨額：${net>0?'UGG 欠 INA':'INA 欠 UGG'} ${money(Math.abs(net))}</div>`;
-
-  html += `<div class="summary-group-title">代墊明細</div>`;
-
-  if(expenses.length===0){
-    html += `<div class="tx-empty">本月尚無代墊紀錄</div>`;
-  } else {
-    // 依照付款人（INA／UGG）分組，並分別計算各自代墊總額
-    const renderExpenseItem = t=>{
-      const settled = t.status==='settled';
-      return `
-      <div class="tx-item" style="${settled?'opacity:.6;':''}">
-        <div class="tx-icon type-expense">${CATEGORY_ICON[t.category]||'📎'}</div>
-        <div class="tx-mid">
-          <div class="name">${t.category}${t.note?'・'+t.note:''}${recurringTagHtml(t)}</div>
-          <div class="meta">${t.date.slice(5)}・${t.payer} 支付</div>
-          ${settleMetaHtml(t)}
-        </div>
-        <div class="tx-amt mono">${money(t.amount)}</div>
-        <div class="tx-actions">
-          ${undoBtnHtml(t)}
-          ${recurringActionsHtml(t)}
-          <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
-          <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
-        </div>
-      </div>`;
-    };
-
-    const renderPayerGroup = (payerName, cssClass)=>{
-      const items = expenses.filter(t=>t.payer===payerName);
-      if(items.length===0) return '';
-      const subtotal = items.reduce((s,t)=>s+Number(t.amount),0);
-      return `
-        <div class="summary-subgroup">
-          <div class="summary-subgroup-head ${cssClass}">
-            <span class="sg-name">${payerName} 支付</span>
-            <span class="sg-total mono">${money(subtotal)}</span>
-          </div>
-          ${items.map(renderExpenseItem).join('')}
-        </div>`;
-    };
-
-    html += renderPayerGroup('INA', 'who-ina');
-    html += renderPayerGroup('UGG', 'who-ugg');
-
-    // 若有付款人不是 INA／UGG 的例外資料，仍完整顯示避免遺漏
-    const others = expenses.filter(t=>t.payer!=='INA' && t.payer!=='UGG');
-    if(others.length>0){
-      const subtotal = others.reduce((s,t)=>s+Number(t.amount),0);
-      html += `
-        <div class="summary-subgroup">
-          <div class="summary-subgroup-head">
-            <span class="sg-name">其他</span>
-            <span class="sg-total mono">${money(subtotal)}</span>
-          </div>
-          ${others.map(renderExpenseItem).join('')}
-        </div>`;
+  async function load(){
+    try{
+      const { data, error } = await sb.from(TABLE).select('*').order('received', { ascending:false });
+      if(error) throw error;
+      tasks = data || [];
+      tasks.forEach(t => {
+        if(t.source === undefined || t.source === null) t.source = '';
+        if(t.category === undefined || t.category === null) t.category = '';
+        if(t.progress === undefined || t.progress === null) t.progress = '';
+        t.completedAt = t.completed_at || null;
+        t.completeNote = t.complete_note || '';
+        t.onHold = !!t.on_hold;
+        t.holdNote = t.hold_note || '';
+        // migrate old urgency values (high/mid/low) to new scheme
+        if(t.urgency === 'mid') t.urgency = 'normal';
+        if(t.urgency === 'low') t.urgency = 'note';
+        if(!urgencyLabel[t.urgency]) t.urgency = 'normal';
+        // migrate old datetime values to date-only
+        if(t.received && t.received.includes('T')) t.received = t.received.split('T')[0];
+        if(t.deadline && typeof t.deadline === 'string' && t.deadline.includes('T')) t.deadline = t.deadline.split('T')[0];
+      });
+    }catch(e){
+      console.error('讀取 Supabase 資料失敗，改用本機備份：', e);
+      // 連不到 Supabase 時，退回舊的 localStorage 備份，避免資料完全無法顯示
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        tasks = raw ? JSON.parse(raw) : [];
+      }catch(e2){ tasks = []; }
     }
   }
+  // 本機備份，主要資料以 Supabase 為主，localStorage 只作離線保險
+  function saveLocalBackup(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks)); }
 
-  html += `<div class="summary-group-title">借款明細</div>`;
-  html += debts.length===0
-    ? `<div class="tx-empty">本月尚無借款紀錄</div>`
-    : debts.map(t=>{
-        const settled = t.status==='settled';
-        return `
-      <div class="tx-item" style="${settled?'opacity:.6;':''}">
-        <div class="tx-icon type-debt">${CATEGORY_ICON[t.category]||'🖋'}</div>
-        <div class="tx-mid">
-          <div class="name">${t.lender} 借給 ${t.borrower}</div>
-          <div class="meta">${t.date.slice(5)}・${t.category?t.category+'・':''}${t.note||'借款'}</div>
-          ${settleMetaHtml(t)}
-        </div>
-        <div class="tx-amt mono">${money(t.amount)}</div>
-        <div class="tx-actions">
-          ${undoBtnHtml(t)}
-          <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
-          <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
-        </div>
-      </div>`;
-      }).join('');
-
-  document.getElementById('summaryTxList').innerHTML = html;
-}
-
-function renderCalendar(){
-  const grid = document.getElementById('calGrid');
-  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
-  const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
-  let html = '';
-  for(let i=0;i<firstDay;i++) html += `<div class="cal-cell empty"></div>`;
-
-  for(let day=1; day<=daysInMonth; day++){
-    const dateStr = `${viewYear}-${pad(viewMonth+1)}-${pad(day)}`;
-    const dayTx = transactions.filter(t=>t.date===dateStr);
-    const inaSum = dayTx.filter(t=>t.type==='expense' && t.payer==='INA').reduce((s,t)=>s+Number(t.amount),0);
-    const uggSum = dayTx.filter(t=>t.type==='expense' && t.payer==='UGG').reduce((s,t)=>s+Number(t.amount),0);
-    const hasDebt = dayTx.some(t=>t.type==='debt');
-    const hasExpense = dayTx.some(t=>t.type==='expense');
-    const isToday = dateStr === todayStr();
-
-    html += `
-      <div class="cal-cell ${isToday?'today':''}" onclick="openDayModal('${dateStr}')">
-        <div class="cal-day-num">${day}</div>
-        ${(inaSum>0||uggSum>0) ? `<div class="cal-day-amounts mono">
-          ${inaSum>0 ? `<div class="cal-amt ina">INA ${inaSum.toLocaleString()}</div>` : ''}
-          ${uggSum>0 ? `<div class="cal-amt ugg">UGG ${uggSum.toLocaleString()}</div>` : ''}
-        </div>` : ''}
-        ${(hasDebt||hasExpense) ? `<div class="cal-dots">${hasExpense?'<span class="dot expense"></span>':''}${hasDebt?'<span class="dot debt"></span>':''}</div>` : ''}
-      </div>`;
-  }
-  grid.innerHTML = html;
-}
-
-function changeMonth(delta){
-  viewMonth += delta;
-  if(viewMonth<0){viewMonth=11; viewYear--;}
-  if(viewMonth>11){viewMonth=0; viewYear++;}
-  renderAll();
-}
-
-/* 返回「今天」所在的月份 */
-function goToToday(){
-  viewYear = Y; viewMonth = M;
-  document.getElementById('monthPicker').classList.remove('open');
-  renderAll();
-}
-
-/* ---- 年份／月份快速選擇器 ---- */
-function togglePicker(e){
-  e.stopPropagation();
-  const p = document.getElementById('monthPicker');
-  const willOpen = !p.classList.contains('open');
-  if(willOpen){
-    const ySel = document.getElementById('pickYear');
-    const mSel = document.getElementById('pickMonth');
-    ySel.innerHTML = '';
-    for(let y=viewYear-6; y<=viewYear+6; y++){
-      ySel.innerHTML += `<option value="${y}" ${y===viewYear?'selected':''}>${y} 年</option>`;
+  async function loadLoans(){
+    try{
+      const { data, error } = await sb.from(LOAN_TABLE).select('*').order('loan_date', { ascending:false });
+      if(error) throw error;
+      loans = data || [];
+      loans.forEach(l => {
+        if(l.department === undefined || l.department === null) l.department = '';
+        if(l.purpose === undefined || l.purpose === null) l.purpose = '';
+        if(l.note === undefined || l.note === null) l.note = '';
+        l.expectedReturn = l.expected_return || null;
+        l.returnDate = l.return_date || null;
+        l.returnNote = l.return_note || '';
+      });
+    }catch(e){
+      console.error('讀取合約借閱資料失敗，改用本機備份：', e);
+      // 連不到 Supabase（例如資料表尚未建立）時，退回本機備份，避免資料完全無法顯示
+      try{
+        const raw = localStorage.getItem(LOAN_STORAGE_KEY);
+        loans = raw ? JSON.parse(raw) : [];
+      }catch(e2){ loans = []; }
     }
-    mSel.innerHTML = '';
-    for(let m=0;m<12;m++){
-      mSel.innerHTML += `<option value="${m}" ${m===viewMonth?'selected':''}>${m+1} 月</option>`;
-    }
-    p.classList.add('open');
-  } else {
-    p.classList.remove('open');
   }
-}
+  function saveLoanLocalBackup(){ localStorage.setItem(LOAN_STORAGE_KEY, JSON.stringify(loans)); }
 
-function jumpToPicker(){
-  viewYear = Number(document.getElementById('pickYear').value);
-  viewMonth = Number(document.getElementById('pickMonth').value);
-  document.getElementById('monthPicker').classList.remove('open');
-  renderAll();
-}
-
-document.addEventListener('click', (e)=>{
-  const picker = document.getElementById('monthPicker');
-  const btn = document.getElementById('monthLabelBtn');
-  if(picker && picker.classList.contains('open') && !picker.contains(e.target) && e.target!==btn){
-    picker.classList.remove('open');
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function toLocalDateValue(d){
+    return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
   }
-});
-
-/* ================= Modal：當日明細 ================= */
-function openDayModal(dateStr){
-  currentDayStr = dateStr;
-  const [yy,mm,dd] = dateStr.split('-');
-  document.getElementById('dayModalTitle').textContent = `${yy} 年 ${mm} 月 ${dd} 日 明細`;
-  renderDayList();
-  document.getElementById('dayAddBtn').onclick = () => openForm(dateStr);
-  document.getElementById('dayOverlay').classList.add('open');
-}
-
-function renderDayList(){
-  const list = transactions.filter(t=>t.date===currentDayStr);
-  const box = document.getElementById('dayTxList');
-  if(list.length===0){
-    box.innerHTML = '<div class="tx-empty">這天還沒有任何紀錄</div>';
-    return;
+  function parseDateLocal(s){
+    const [y,m,d] = s.split('-').map(Number);
+    return new Date(y, m-1, d);
   }
-  box.innerHTML = list.map(t=>{
-    if(t.type==='expense'){
-      const settled = t.status==='settled';
-      return `
-      <div class="tx-item" style="${settled?'opacity:.6;':''}">
-        <div class="tx-icon type-expense">${CATEGORY_ICON[t.category]||'📎'}</div>
-        <div class="tx-mid">
-          <div class="name">${t.category}${t.note?'・'+t.note:''}${recurringTagHtml(t)}</div>
-          <div class="meta">${t.payer} 支付</div>
-          ${settleMetaHtml(t)}
-        </div>
-        <div class="tx-amt mono">${money(t.amount)}</div>
-        <div class="tx-actions">
-          ${undoBtnHtml(t)}
-          ${recurringActionsHtml(t)}
-          <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
-          <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
-        </div>
-      </div>`;
-    } else {
-      const settled = t.status==='settled';
-      return `
-      <div class="tx-item" style="${settled?'opacity:.6;':''}">
-        <div class="tx-icon type-debt">${CATEGORY_ICON[t.category]||'🖋'}</div>
-        <div class="tx-mid">
-          <div class="name">${t.lender} 借給 ${t.borrower}</div>
-          <div class="meta">${t.category?t.category+'・':''}${t.note||'借款'}</div>
-          ${settleMetaHtml(t)}
-        </div>
-        <div class="tx-amt mono">${money(t.amount)}</div>
-        <div class="tx-actions">
-          ${undoBtnHtml(t)}
-          <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
-          <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
-        </div>
-      </div>`;
-    }
-  }).join('');
-}
-
-async function deleteTx(id){
-  const { error } = await sb.from(TABLE).delete().eq('id', id);
-  if(error){
-    console.error(error);
-    alert('刪除失敗：' + error.message);
-    return;
+  function fmtDate(dateStr){
+    if(!dateStr) return '不限';
+    const [y,m,d] = dateStr.split('-');
+    return `${y}/${m}/${d}`;
   }
-  transactions = transactions.filter(t=>t.id!==id);
-  lastSettledIds = lastSettledIds.filter(x=>x!==id);
-  if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
-  if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
-  renderAll();
-}
-
-/* ================= 循環代墊：整組刪除／整組修改 ================= */
-
-/* 一次刪除同一組循環代墊的所有紀錄 */
-async function deleteRecurringGroup(groupId){
-  const items = transactions.filter(t=>t.recurring_group===groupId);
-  if(items.length===0) return;
-  if(!confirm(`確定要刪除整組循環代墊嗎？\n共 ${items.length} 筆紀錄（含已結清）將一併刪除，此動作無法復原。`)) return;
-
-  const { error } = await sb.from(TABLE).delete().eq('recurring_group', groupId);
-  if(error){
-    console.error(error);
-    alert('刪除失敗：' + error.message);
-    return;
-  }
-  const ids = items.map(t=>t.id);
-  transactions = transactions.filter(t=>t.recurring_group!==groupId);
-  lastSettledIds = lastSettledIds.filter(id=>!ids.includes(id));
-
-  if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
-  if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
-  renderAll();
-}
-
-/* 打開「整組修改」表單，帶入該組目前的內容作為預設值 */
-let pendingRecurringGroup = null;
-function openRecurringEditModal(groupId){
-  const items = transactions.filter(t=>t.recurring_group===groupId);
-  if(items.length===0) return;
-  pendingRecurringGroup = groupId;
-  const sample = items[0];
-
-  document.getElementById('recurCount').textContent = items.length;
-  document.getElementById('recurCategory').value = sample.category;
-  document.getElementById('recurPayer').value = sample.payer;
-  document.getElementById('recurAmount').value = sample.amount;
-  document.getElementById('recurNote').value = sample.note || '';
-  document.getElementById('recurIncludeSettled').checked = false;
-  document.getElementById('recurringEditOverlay').classList.add('open');
-}
-
-/* 將修改套用到整組循環代墊（預設只套用到尚未結清的紀錄，可勾選一併套用到已結清紀錄） */
-async function saveRecurringEdit(e){
-  e.preventDefault();
-  if(!pendingRecurringGroup) return;
-
-  const category = document.getElementById('recurCategory').value;
-  const payer = document.getElementById('recurPayer').value;
-  const amount = Number(document.getElementById('recurAmount').value);
-  const note = document.getElementById('recurNote').value;
-  const includeSettled = document.getElementById('recurIncludeSettled').checked;
-
-  let items = transactions.filter(t=>t.recurring_group===pendingRecurringGroup);
-  if(!includeSettled) items = items.filter(t=>t.status!=='settled');
-  if(items.length===0){
-    alert('目前沒有符合條件（尚未結清）的紀錄可以修改，若要一併修改已結清的紀錄，請勾選下方選項。');
-    return;
+  function dateKey(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
   }
 
-  const ids = items.map(t=>t.id);
-  const payload = { category, payer, amount, note };
-  const { error } = await sb.from(TABLE).update(payload).in('id', ids);
-  if(error){
-    console.error(error);
-    alert('修改失敗：' + error.message);
-    return;
-  }
-  transactions.forEach(t=>{
-    if(ids.includes(t.id)){ t.category=category; t.payer=payer; t.amount=amount; t.note=note; }
+  const categoryInput = document.getElementById('category');
+
+  // default received = today
+  const receivedInput = document.getElementById('received');
+  receivedInput.value = toLocalDateValue(new Date());
+  document.getElementById('nowBtn').addEventListener('click', () => {
+    receivedInput.value = toLocalDateValue(new Date());
   });
 
-  closeModal('recurringEditOverlay');
-  pendingRecurringGroup = null;
-  if(document.getElementById('dayOverlay').classList.contains('open')) renderDayList();
-  if(document.getElementById('summaryOverlay').classList.contains('open')) renderSummaryList();
-  renderAll();
-}
-
-/* ================= Modal：新增／編輯表單 ================= */
-function setFormType(type){
-  formType = type;
-  document.getElementById('btnTypeExpense').classList.toggle('active', type==='expense');
-  document.getElementById('btnTypeDebt').classList.toggle('active', type==='debt');
-  document.getElementById('expenseFields').style.display = type==='expense' ? 'block' : 'none';
-  document.getElementById('debtFields').style.display = type==='debt' ? 'block' : 'none';
-}
-
-/* 產生「每月幾號」下拉選單（1~31 號） */
-function fillRecurringDayOptions(selectedDay){
-  const sel = document.getElementById('fRecurringDay');
-  sel.innerHTML = '';
-  for(let d=1; d<=31; d++){
-    sel.innerHTML += `<option value="${d}" ${d===selectedDay?'selected':''}>${d} 號</option>`;
-  }
-}
-
-function toggleRecurringFields(){
-  const on = document.getElementById('fRecurring').checked;
-  document.getElementById('recurringFields').classList.toggle('show', on);
-}
-
-function openForm(dateStr, editId=null){
-  document.getElementById('formOverlay').classList.add('open');
-  document.getElementById('fDate').value = dateStr;
-  document.getElementById('fEditId').value = editId ?? '';
-  document.getElementById('fRecurringGroup').value = '';
-  document.getElementById('fRecurring').checked = false;
-  toggleRecurringFields();
-  fillRecurringDayOptions(Number(dateStr.split('-')[2]));
-  document.getElementById('fRecurringUntil').value = dateStr.slice(0,7);
-
-  if(editId){
-    const t = transactions.find(x=>x.id===editId);
-    document.getElementById('formModalTitle').textContent = '編輯紀錄';
-    document.getElementById('fSubmitBtn').textContent = '更新紀錄';
-    setFormType(t.type);
-    document.getElementById('fAmount').value = t.amount;
-    document.getElementById('fNote').value = t.note || '';
-    if(t.type==='expense'){
-      document.getElementById('fCategory').value = t.category;
-      document.getElementById('fPayer').value = t.payer;
-    } else {
-      document.getElementById('fLender').value = t.lender;
-      document.getElementById('fBorrower').value = t.borrower;
-      document.getElementById('fDebtCategory').value = t.category || '其他';
+  // deadline "不限" toggle
+  const deadlineInput = document.getElementById('deadline');
+  const deadlineUnlimited = document.getElementById('deadlineUnlimited');
+  deadlineUnlimited.addEventListener('change', () => {
+    if(deadlineUnlimited.checked){
+      deadlineInput.value = '';
+      deadlineInput.disabled = true;
+      deadlineInput.required = false;
+    }else{
+      deadlineInput.disabled = false;
+      deadlineInput.required = true;
     }
-    // 編輯既有紀錄時，只針對這一筆做修改，不重新設定循環規則
-    document.getElementById('recurringToggleLabel').style.display = 'none';
-  } else {
-    document.getElementById('formModalTitle').textContent = '新增紀錄';
-    document.getElementById('fSubmitBtn').textContent = '儲存紀錄';
-    document.getElementById('txForm').reset();
-    document.getElementById('fDate').value = dateStr;
-    fillRecurringDayOptions(Number(dateStr.split('-')[2]));
-    document.getElementById('fRecurringUntil').value = dateStr.slice(0,7);
-    setFormType('expense');
-    document.getElementById('recurringToggleLabel').style.display = 'flex';
-  }
-}
+  });
 
-/* 依照「每月幾號」與「循環至」年月，從 fromDate 所在月份開始，逐月產生日期字串清單 */
-function buildRecurringDates(fromDate, day, untilYearMonth){
-  const [fy, fm] = fromDate.split('-').map(Number);
-  const [uy, um] = untilYearMonth.split('-').map(Number);
-  const dates = [];
-  let y = fy, m = fm; // m 為 1~12
-  while(y < uy || (y === uy && m <= um)){
-    const lastDay = new Date(y, m, 0).getDate();
-    const useDay = Math.min(day, lastDay); // 若該月天數不足（如 2 月沒有 30 號），自動使用當月最後一天
-    dates.push(`${y}-${pad(m)}-${pad(useDay)}`);
-    m++;
-    if(m>12){ m=1; y++; }
-  }
-  return dates;
-}
+  // ---- category-driven form mode ----
+  // "法務" keeps the full rule set (received date + urgency + deadline).
+  // All other categories only need a single work date; the task then just
+  // shows up on that date in the calendar (no urgency picker, no deadline).
+  // 除了「法務」維持完整規則外，其餘所有類別（含「不指定」）都只需要填工作時間
+  function isSimpleCategory(category){ return category !== '法務'; }
+  const urgencyFieldEl = document.getElementById('urgencyField');
+  const deadlineFieldEl = document.getElementById('deadlineField');
+  const receivedLabelEl = document.getElementById('receivedLabel');
 
-async function saveTransaction(e){
-  e.preventDefault();
-  const editId = document.getElementById('fEditId').value;
-  const date = document.getElementById('fDate').value;
-  const amount = Number(document.getElementById('fAmount').value);
-  const note = document.getElementById('fNote').value;
-
-  // 編輯時保留原本的結清狀態，避免每次修改都被重置回「未結清」
-  const existing = editId ? transactions.find(t=>t.id===Number(editId)) : null;
-  const status = existing ? (existing.status || 'unpaid') : 'unpaid';
-
-  const isRecurring = !editId && formType==='expense' && document.getElementById('fRecurring').checked;
-
-  function buildPayload(d){
-    if(formType==='expense'){
-      return {
-        type:'expense', date:d, amount,
-        category: document.getElementById('fCategory').value,
-        payer: document.getElementById('fPayer').value,
-        lender:null, borrower:null,
-        note, status
-      };
+  function applyCategoryMode(category){
+    const isSimple = isSimpleCategory(category);
+    urgencyFieldEl.style.display = isSimple ? 'none' : '';
+    deadlineFieldEl.style.display = isSimple ? 'none' : '';
+    receivedLabelEl.textContent = isSimple ? '工作時間' : '收到工作的日期';
+    if(isSimple){
+      document.getElementById('u-normal').checked = true;
+      deadlineUnlimited.checked = true;
+      deadlineInput.value = '';
+      deadlineInput.disabled = true;
+      deadlineInput.required = false;
     }
-    return {
-      type:'debt', date:d, amount,
-      lender: document.getElementById('fLender').value,
-      borrower: document.getElementById('fBorrower').value,
-      category: document.getElementById('fDebtCategory').value,
-      payer:null,
-      note, status
-    };
+  }
+  categoryInput.addEventListener('change', () => applyCategoryMode(categoryInput.value));
+  applyCategoryMode(categoryInput.value);
+
+  function deadlineStatus(deadlineStr, done){
+    if(done) return { key:'done' };
+    if(!deadlineStr) return { key:'unlimited', label:'不限期限' };
+    const dl = parseDateLocal(deadlineStr);
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const diffDays = Math.round((dl - today) / 86400000);
+    if(diffDays < 0) return { key:'overdue', label:'已逾期' };
+    if(diffDays <= 1) return { key:'soon', label:'即將到期' };
+    return { key:'ok', label:'尚有餘裕' };
   }
 
-  const submitBtn = document.getElementById('fSubmitBtn');
-  const originalText = submitBtn.textContent;
-  submitBtn.disabled = true;
-  submitBtn.textContent = '儲存中…';
-
-  if(isRecurring){
-    // 循環代墊：從這筆紀錄所在月份開始，每月同一天，直到指定年月為止，批次建立多筆紀錄
-    const day = Number(document.getElementById('fRecurringDay').value);
-    const until = document.getElementById('fRecurringUntil').value;
-    if(!until){
-      submitBtn.disabled = false; submitBtn.textContent = originalText;
-      alert('請選擇循環至哪一個年月');
-      return;
+  function filteredTasks(){
+    let list = tasks.slice();
+    if(filterMode === 'active') list = list.filter(t => !t.done);
+    if(filterMode === 'done') list = list.filter(t => t.done);
+    if(filterMode === 'hold') list = list.filter(t => t.onHold);
+    if(urgencyFilter !== 'all') list = list.filter(t => t.urgency === urgencyFilter);
+    if(sourceFilter !== 'all') list = list.filter(t => (t.source || '(未填寫來源)') === sourceFilter);
+    if(categoryFilter === 'none') list = list.filter(t => !t.category);
+    else if(categoryFilter !== 'all') list = list.filter(t => t.category === categoryFilter);
+    if(searchQuery){
+      const q = searchQuery.trim().toLowerCase();
+      if(q) list = list.filter(t =>
+        (t.title || '').toLowerCase().includes(q) ||
+        (t.source || '').toLowerCase().includes(q)
+      );
     }
-    const dates = buildRecurringDates(date, day, until);
-    if(dates.length===0){
-      submitBtn.disabled = false; submitBtn.textContent = originalText;
-      alert('循環至的年月必須等於或晚於這筆紀錄的年月');
-      return;
-    }
-    const groupId = 'rec_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
-    const payloads = dates.map(d => ({ ...buildPayload(d), recurring_group: groupId }));
-
-    const { data, error } = await sb.from(TABLE).insert(payloads).select();
-    submitBtn.disabled = false;
-    submitBtn.textContent = originalText;
-    if(error){
-      console.error(error);
-      alert('建立循環代墊失敗：' + error.message + '\n（若欄位不存在，請先在 Supabase 資料表新增 recurring_group 欄位）');
-      return;
-    }
-    transactions.push(...data);
-  } else if(editId){
-    const payload = buildPayload(date);
-    const { data, error } = await sb.from(TABLE).update(payload).eq('id', Number(editId)).select().single();
-    submitBtn.disabled = false;
-    submitBtn.textContent = originalText;
-    if(error){ console.error(error); alert('更新失敗：' + error.message); return; }
-    const idx = transactions.findIndex(t=>t.id===Number(editId));
-    transactions[idx] = data;
-  } else {
-    const payload = buildPayload(date);
-    const { data, error } = await sb.from(TABLE).insert(payload).select().single();
-    submitBtn.disabled = false;
-    submitBtn.textContent = originalText;
-    if(error){ console.error(error); alert('新增失敗：' + error.message); return; }
-    transactions.push(data);
+    return list;
   }
 
-  closeModal('formOverlay');
-  currentDayStr = date;
-  renderAll();
+  // ---- category quick-filter (chips) ----
+  const CATEGORY_DEFS = [
+    { key:'all', label:'全部' },
+    { key:'請假', label:'請假' },
+    { key:'會議', label:'會議' },
+    { key:'公差', label:'公差' },
+    { key:'法務', label:'法務' },
+    { key:'合約借閱', label:'合約借閱' },
+    { key:'none', label:'其他' },
+  ];
 
-  // 依照目前實際開啟的視窗刷新對應清單，而不是每次都強制開啟「當日明細」
-  const dayOpen = document.getElementById('dayOverlay').classList.contains('open');
-  const summaryOpen = document.getElementById('summaryOverlay').classList.contains('open');
-  if(dayOpen){
-    renderDayList();
-  } else if(summaryOpen){
-    renderSummaryList();
-  } else {
-    openDayModal(date);
+  // same as filteredTasks() but ignores the category filter itself, so chip counts
+  // reflect "how many items would show if I picked this category" given the other active filters
+  function tasksMatchingOtherFilters(){
+    let list = tasks.slice();
+    if(filterMode === 'active') list = list.filter(t => !t.done);
+    if(filterMode === 'done') list = list.filter(t => t.done);
+    if(filterMode === 'hold') list = list.filter(t => t.onHold);
+    if(urgencyFilter !== 'all') list = list.filter(t => t.urgency === urgencyFilter);
+    if(sourceFilter !== 'all') list = list.filter(t => (t.source || '(未填寫來源)') === sourceFilter);
+    if(searchQuery){
+      const q = searchQuery.trim().toLowerCase();
+      if(q) list = list.filter(t => (t.title||'').toLowerCase().includes(q) || (t.source||'').toLowerCase().includes(q));
+    }
+    return list;
   }
-}
+  function loansMatchingOtherFilters(){
+    if(sourceFilter !== 'all') return [];
+    let list = loans.slice();
+    if(filterMode === 'active') list = list.filter(l => !l.returnDate);
+    if(filterMode === 'done') list = list.filter(l => !!l.returnDate);
+    list = list.filter(l => matchesSearch([l.contract_name, l.borrower]));
+    return list;
+  }
+  function categoryCount(key){
+    if(key === '合約借閱') return loansMatchingOtherFilters().length;
+    const base = tasksMatchingOtherFilters();
+    if(key === 'all') return base.length + loansMatchingOtherFilters().length;
+    if(key === 'none') return base.filter(t => !t.category).length;
+    return base.filter(t => t.category === key).length;
+  }
+  function renderCategoryOptions(){
+    const sel = document.getElementById('categoryFilterSelect');
+    sel.innerHTML = CATEGORY_DEFS.map(def => {
+      const count = categoryCount(def.key);
+      const label = def.key === 'all' ? `全部類別（${count}）` : `${def.label}（${count}）`;
+      return `<option value="${def.key}">${label}</option>`;
+    }).join('');
+    sel.value = categoryFilter;
+  }
 
-function closeModal(id){
-  document.getElementById(id).classList.remove('open');
-}
+  function renderFilterSummary(){
+    const parts = [];
+    const filterLabels = { active:'進行中', hold:'暫緩中', done:'已完成' };
+    if(filterMode !== 'all') parts.push(filterLabels[filterMode]);
+    if(categoryFilter !== 'all') parts.push(categoryFilter === 'none' ? '其他類別' : categoryFilter);
+    if(urgencyFilter !== 'all') parts.push(urgencyLabel[urgencyFilter]);
+    if(sourceFilter !== 'all') parts.push(`來源：${sourceFilter}`);
+    if(searchQuery.trim()) parts.push(`搜尋「${searchQuery.trim()}」`);
+    const el = document.getElementById('filterSummary');
+    const resetBtn = document.getElementById('filterResetBtn');
+    const hasFilters = parts.length > 0;
+    resetBtn.style.display = hasFilters ? '' : 'none';
+    const totalCount = filteredTasks().length + filteredLoansForCalendar().length;
+    el.innerHTML = hasFilters
+      ? `目前顯示：<b>${parts.join('、')}</b>　共 ${totalCount} 筆`
+      : `顯示全部工作，共 ${totalCount} 筆`;
+  }
 
-// 點擊遮罩空白處關閉
-document.querySelectorAll('.overlay').forEach(ov=>{
-  ov.addEventListener('click', e=>{ if(e.target===ov) ov.classList.remove('open'); });
-});
+  function sortTasksForList(list){
+    const sortMode = document.getElementById('listSortSelect').value;
+    const arr = list.slice();
+    if(sortMode === 'urgency') arr.sort(compareByUrgency);
+    else if(sortMode === 'received') arr.sort((a,b) => (b.received||'').localeCompare(a.received||''));
+    else arr.sort((a,b) => (a.deadline||'9999-99-99').localeCompare(b.deadline||'9999-99-99'));
+    return arr;
+  }
 
-loadTransactions();
-</script>
-</body>
-</html>
+  function renderListView(){
+    const tasksList = sortTasksForList(filteredTasks());
+    const loansList = filteredLoansForCalendar();
+    const total = tasksList.length + loansList.length;
+    document.getElementById('listViewCount').textContent = `共 ${total} 筆`;
+    const cardsEl = document.getElementById('taskCards');
+    const emptyEl = document.getElementById('taskCardsEmpty');
+    if(total === 0){
+      cardsEl.innerHTML = '';
+      emptyEl.style.display = '';
+    }else{
+      emptyEl.style.display = 'none';
+      cardsEl.innerHTML = tasksList.map(t => cardHtml(t, { listView:true })).join('') + loansList.map(l => loanCardHtml(l, { listView:true })).join('');
+    }
+  }
+
+  function renderSourceOptions(){
+    const sel = document.getElementById('sourceFilter');
+    const sources = Array.from(new Set(tasks.map(t => t.source && t.source.trim() ? t.source.trim() : '(未填寫來源)'))).sort((a,b)=>a.localeCompare(b,'zh-Hant'));
+    const prev = sourceFilter;
+    sel.innerHTML = `<option value="all">全部來源</option>` +
+      sources.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+    // keep current selection if it still exists among sources, else reset to all
+    if(prev !== 'all' && sources.includes(prev)){
+      sel.value = prev;
+    }else{
+      sourceFilter = 'all';
+      sel.value = 'all';
+    }
+  }
+
+  function cardHtml(t, opts){
+    opts = opts || {};
+    const playfulDone = t.done && opts.listView;
+    const status = deadlineStatus(t.deadline, t.done);
+    let badgeHtml = '';
+    if(!t.done){
+      if(status.key === 'overdue') badgeHtml = `<span class="badge overdue">⚠ ${status.label}</span>`;
+      else if(status.key === 'soon') badgeHtml = `<span class="badge soon">⏰ ${status.label}</span>`;
+      else if(status.key === 'unlimited') badgeHtml = `<span class="badge unlimited">${status.label}</span>`;
+      else badgeHtml = `<span class="badge ok">${status.label}</span>`;
+    }
+    const holdBadgeHtml = (t.onHold && !t.done) ? `<span class="badge hold">⏸ 暫緩</span>` : '';    const sourceHtml = t.source ? `<span class="source">來源：${escapeHtml(t.source)}</span>` : '';
+    const categoryHtml = t.category ? `<span class="category">類別：${escapeHtml(t.category)}</span>` : '';
+    const urgencyTagHtml = isSimpleCategory(t.category) ? '' : `<span class="tag u-${t.urgency}">${urgencyLabel[t.urgency]}</span>`;
+    const completeInfoHtml = t.done && t.completedAt
+      ? `<span class="badge ok">✅ 完成：${fmtDate(t.completedAt)}</span>`
+      : '';
+    const completeNoteHtml = t.completeNote
+      ? `<span class="complete-note">完成說明：${escapeHtml(t.completeNote)}</span>`
+      : '';
+    const holdNoteHtml = t.holdNote
+      ? `<span class="complete-note">暫緩說明：${escapeHtml(t.holdNote)}</spa
