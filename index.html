@@ -270,6 +270,11 @@
   .tx-actions button:hover{color:var(--seal-red);}
   .tx-actions button.tx-undo-btn{color:var(--gold);}
   .tx-actions button.tx-undo-btn:hover{color:var(--navy);}
+  .tx-actions button.tx-settle-btn{
+    color:var(--jade); font-size:11.5px; font-weight:600; border:1px solid var(--jade);
+    border-radius:6px; padding:2px 7px; white-space:nowrap;
+  }
+  .tx-actions button.tx-settle-btn:hover{background:var(--jade-soft); color:var(--jade);}
   .tx-empty{padding:26px 0; text-align:center; color:var(--ink-soft); font-size:13px;}
 
   /* ---------- 本月收支明細 Modal ---------- */
@@ -532,7 +537,7 @@
 <div class="overlay" id="settleOverlay">
   <div class="modal">
     <div class="modal-head">
-      <h3>結清本月債務</h3>
+      <h3 id="settleModalTitle">結清本月債務</h3>
       <button class="modal-close" onclick="closeModal('settleOverlay')">✕</button>
     </div>
     <div class="modal-body">
@@ -655,6 +660,12 @@ function undoBtnHtml(t){
   return `<button class="tx-undo-btn" title="復原這一筆結清" onclick="undoSettleOne(${t.id})">↺</button>`;
 }
 
+/* 單筆還款按鈕：只有「未結清」的紀錄才會顯示，點擊後只結清這一筆 */
+function settleOneBtnHtml(t){
+  if(t.status==='settled') return '';
+  return `<button class="tx-settle-btn" title="還款（結清這一筆）" onclick="event.stopPropagation(); settleOne(${t.id})">還款</button>`;
+}
+
 /* ---- 從 Supabase 讀取全部紀錄 ---- */
 async function loadTransactions(){
   const { data, error } = await sb.from(TABLE).select('*').order('date', {ascending:true});
@@ -742,8 +753,31 @@ function settleAll(){
   openSettleModal(viewYear, viewMonth, pendingSettleList);
 }
 
+function settleOne(id){
+  const t = transactions.find(x=>x.id===id);
+  if(!t || t.status==='settled') return;
+  pendingSettleList = [t];
+  openSettleModal(null, null, [t]);
+}
+
 function openSettleModal(y, m, list){
   pendingSettleList = list;
+  const single = list.length===1 && y===null;
+  document.getElementById('settleModalTitle').textContent = single ? '單筆還款' : '結清本月債務';
+  if(single){
+    const t = list[0];
+    const label = t.type==='expense'
+      ? `${t.category||''}${t.note?'・'+t.note:''}（${t.payer} 支付）`
+      : `${t.lender} 借給 ${t.borrower}${t.note?'・'+t.note:''}`;
+    document.getElementById('settleSummaryText').innerHTML =
+      `即將結清這一筆紀錄<br><b>${t.date}・${label}</b><br>金額 <b>${money(t.amount)}</b>`;
+    pendingSettleMethod = '匯款';
+    document.querySelectorAll('#methodToggle button').forEach(b=>b.classList.toggle('active', b.dataset.v==='匯款'));
+    document.getElementById('settleDate').value = todayStr();
+    document.getElementById('settleNote').value = '';
+    document.getElementById('settleOverlay').classList.add('open');
+    return;
+  }
   const totalExpense = list.filter(t=>t.type==='expense').reduce((s,t)=>s+Number(t.amount),0);
   const totalDebt = list.filter(t=>t.type==='debt').reduce((s,t)=>s+Number(t.amount),0);
   document.getElementById('settleSummaryText').innerHTML =
@@ -950,7 +984,7 @@ function renderSummaryList(){
         </div>
         <div class="tx-amt mono">${money(t.amount)}</div>
         <div class="tx-actions">
-          ${undoBtnHtml(t)}
+          ${undoBtnHtml(t)}${settleOneBtnHtml(t)}
           ${recurringActionsHtml(t)}
           <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
           <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
@@ -1005,7 +1039,7 @@ function renderSummaryList(){
         </div>
         <div class="tx-amt mono">${money(t.amount)}</div>
         <div class="tx-actions">
-          ${undoBtnHtml(t)}
+          ${undoBtnHtml(t)}${settleOneBtnHtml(t)}
           <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
           <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
         </div>
@@ -1125,7 +1159,7 @@ function renderDayList(){
         </div>
         <div class="tx-amt mono">${money(t.amount)}</div>
         <div class="tx-actions">
-          ${undoBtnHtml(t)}
+          ${undoBtnHtml(t)}${settleOneBtnHtml(t)}
           ${recurringActionsHtml(t)}
           <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
           <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
@@ -1143,7 +1177,7 @@ function renderDayList(){
         </div>
         <div class="tx-amt mono">${money(t.amount)}</div>
         <div class="tx-actions">
-          ${undoBtnHtml(t)}
+          ${undoBtnHtml(t)}${settleOneBtnHtml(t)}
           <button title="編輯" onclick="openForm('${t.date}', ${t.id})">✎</button>
           <button title="刪除" onclick="deleteTx(${t.id})">🗑</button>
         </div>
